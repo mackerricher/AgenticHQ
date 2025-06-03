@@ -56,5 +56,10 @@ export const api = {
       const response = await apiRequest("DELETE", `/api/keys/${provider}`);
       return response.json();
     },
+    
+    test: async (provider: string) => {
+      const response = await apiRequest("POST", `/api/keys/${provider}/test`);
+      return response.json();
+    },
   },
 };

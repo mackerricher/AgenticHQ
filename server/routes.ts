@@ -7,6 +7,49 @@ import { planRunner } from "./planRunner";
 import { insertChatMessageSchema, insertPlanSchema } from "@shared/schema";
 import { z } from "zod";
 
+// Test connection functions
+async function testOpenAIConnection(apiKey: string) {
+  try {
+    const response = await fetch("https://api.openai.com/v1/models", {
+      headers: { "Authorization": `Bearer ${apiKey}` }
+    });
+    return response.ok ? { success: true } : { success: false, error: "Invalid API key" };
+  } catch (error) {
+    return { success: false, error: "Connection failed" };
+  }
+}
+
+async function testDeepSeekConnection(apiKey: string) {
+  try {
+    const response = await fetch("https://api.deepseek.com/v1/models", {
+      headers: { "Authorization": `Bearer ${apiKey}` }
+    });
+    return response.ok ? { success: true } : { success: false, error: "Invalid API key" };
+  } catch (error) {
+    return { success: false, error: "Connection failed" };
+  }
+}
+
+async function testGitHubConnection(apiKey: string) {
+  try {
+    const response = await fetch("https://api.github.com/user", {
+      headers: { "Authorization": `token ${apiKey}` }
+    });
+    return response.ok ? { success: true } : { success: false, error: "Invalid token" };
+  } catch (error) {
+    return { success: false, error: "Connection failed" };
+  }
+}
+
+async function testGmailConnection(credentials: string) {
+  try {
+    JSON.parse(credentials);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: "Invalid JSON credentials" };
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Chat endpoint
   app.post("/api/chat", async (req, res) => {
@@ -198,6 +241,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting key:", error);
       res.status(500).json({ error: "Failed to delete API key" });
+    }
+  });
+
+  app.post("/api/keys/:provider/test", async (req, res) => {
+    try {
+      const { provider } = req.params;
+      const apiKey = await secretService.getKey(provider);
+      
+      if (!apiKey) {
+        return res.json({ success: false, error: "No API key found" });
+      }
+
+      let testResult = { success: false, error: "Test not implemented" };
+
+      // Test different providers
+      switch (provider) {
+        case "openai":
+          testResult = await testOpenAIConnection(apiKey);
+          break;
+        case "deepseek":
+          testResult = await testDeepSeekConnection(apiKey);
+          break;
+        case "github":
+          testResult = await testGitHubConnection(apiKey);
+          break;
+        case "gmail":
+          testResult = await testGmailConnection(apiKey);
+          break;
+        default:
+          testResult = { success: false, error: "Unknown provider" };
+      }
+
+      res.json(testResult);
+    } catch (error) {
+      console.error("Error testing connection:", error);
+      res.status(500).json({ error: "Failed to test connection" });
     }
   });
 

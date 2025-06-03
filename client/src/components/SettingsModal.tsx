@@ -88,6 +88,24 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     },
   });
 
+  const testConnectionMutation = useMutation({
+    mutationFn: (provider: string) => api.keys.test(provider),
+    onSuccess: (result, provider) => {
+      toast({
+        title: "Connection Test",
+        description: result.success ? `${provider} connection successful` : `${provider} connection failed: ${result.error}`,
+        variant: result.success ? "default" : "destructive",
+      });
+    },
+    onError: (error, provider) => {
+      toast({
+        title: "Connection Test Failed",
+        description: `Failed to test ${provider} connection: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSaveKey = (provider: string) => {
     const key = keys[provider];
     if (!key || !key.trim()) {
@@ -200,14 +218,24 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                       </div>
                     </div>
                     {openaiStatus?.hasKey && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteKey("openai")}
-                        disabled={deleteKeyMutation.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => testConnectionMutation.mutate("openai")}
+                          disabled={testConnectionMutation.isPending}
+                        >
+                          Test
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteKey("openai")}
+                          disabled={deleteKeyMutation.isPending}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
                   
