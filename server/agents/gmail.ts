@@ -23,18 +23,20 @@ export class GmailAgent {
         };
       }
 
-      // Create JWT auth client
+      // Create JWT auth client with domain-wide delegation
       const auth = new google.auth.JWT(
         serviceAccount.client_email,
         undefined,
         serviceAccount.private_key,
-        ['https://www.googleapis.com/auth/gmail.send']
+        ['https://www.googleapis.com/auth/gmail.send'],
+        serviceAccount.client_email // Use service account email as subject
       );
 
       const gmail = google.gmail({ version: 'v1', auth });
 
-      // Create email message
+      // Create email message with proper headers
       const emailContent = [
+        `From: ${serviceAccount.client_email}`,
         `To: ${to}`,
         `Subject: ${subject}`,
         `Content-Type: text/plain; charset="UTF-8"`,
@@ -49,6 +51,7 @@ export class GmailAgent {
         .replace(/=+$/, '');
 
       // Send the email
+      console.log('Attempting to send email with Gmail API...');
       const response = await gmail.users.messages.send({
         userId: 'me',
         requestBody: {
@@ -56,6 +59,8 @@ export class GmailAgent {
         },
       });
 
+      console.log('Email sent successfully:', response.data);
+      
       return { 
         success: true, 
         result: {

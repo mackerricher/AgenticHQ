@@ -43,10 +43,34 @@ async function testGitHubConnection(apiKey: string) {
 
 async function testGmailConnection(credentials: string) {
   try {
-    JSON.parse(credentials);
+    const { google } = await import("googleapis");
+    const serviceAccount = JSON.parse(credentials);
+    
+    // Create JWT auth client
+    const auth = new google.auth.JWT(
+      serviceAccount.client_email,
+      undefined,
+      serviceAccount.private_key,
+      ['https://www.googleapis.com/auth/gmail.send']
+    );
+
+    // Test the connection by getting the user's profile
+    const gmail = google.gmail({ version: 'v1', auth });
+    await gmail.users.getProfile({ userId: 'me' });
+    
     return { success: true };
   } catch (error) {
-    return { success: false, error: "Invalid JSON credentials" };
+    let errorMessage = "Failed to connect to Gmail";
+    if (error instanceof Error) {
+      if (error.message.includes("invalid_grant")) {
+        errorMessage = "Invalid Gmail credentials. Please check your service account setup.";
+      } else if (error.message.includes("insufficient_scope")) {
+        errorMessage = "Gmail API permissions insufficient. Ensure the service account has Gmail send permissions.";
+      } else {
+        errorMessage = error.message;
+      }
+    }
+    return { success: false, error: errorMessage };
   }
 }
 
