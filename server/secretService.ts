@@ -64,12 +64,7 @@ class SecretService {
   }
 
   async getKey(provider: string): Promise<string | null> {
-    // Check cache first
-    if (this.cache.has(provider)) {
-      return this.cache.get(provider)!;
-    }
-
-    // Check database
+    // Check database first (skip cache to ensure fresh data)
     const secret = await storage.getSecret(provider);
     if (secret) {
       try {
@@ -78,6 +73,7 @@ class SecretService {
         return decryptedKey;
       } catch (error) {
         console.error(`Failed to decrypt key for provider ${provider}:`, error);
+        this.cache.delete(provider); // Clear cache on decrypt error
         return null;
       }
     }
