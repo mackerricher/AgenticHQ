@@ -20,6 +20,7 @@ interface Client {
 export default function Clients() {
   const [clients, setClients] = useState<Client[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [newClient, setNewClient] = useState({
     name: "",
     description: "",
@@ -76,11 +77,17 @@ export default function Clients() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-300 via-blue-200 to-violet-200 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
-      <div className="glitter-overlay fixed inset-0 pointer-events-none"></div>
+    <div className="min-h-screen flex relative overflow-hidden">
+      {/* Glitter Overlay */}
+      <div className="fixed inset-0 glitter-overlay pointer-events-none z-0"></div>
       
-      <div className="relative z-10 p-6">
-        <div className="max-w-6xl mx-auto">
+      {/* Sidebar */}
+      <div className="hidden md:block">
+        <Sidebar onSettingsClick={() => setShowSettings(true)} />
+      </div>
+      
+      <div className="flex-1 relative z-10">
+        <div className="max-w-6xl mx-auto p-8">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-heading gradient-text mb-2">Clients</h1>
@@ -270,6 +277,11 @@ export default function Clients() {
           )}
         </div>
       </div>
+      
+      {/* Settings Modal */}
+      {showSettings && (
+        <SettingsModal onClose={() => setShowSettings(false)} />
+      )}
     </div>
   );
 }
