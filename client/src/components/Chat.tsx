@@ -127,10 +127,24 @@ function PlanStepsDisplay({ planId, activePlanId }: PlanStepsDisplayProps) {
               
               {status === "completed" && result && (
                 <div className="text-sm text-green-600 dark:text-green-400 mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
-                  <strong>Success:</strong> Repository created successfully at{" "}
-                  <a href={result.html_url} target="_blank" rel="noopener noreferrer" className="underline">
-                    {result.html_url}
-                  </a>
+                  <strong>Success:</strong> 
+                  {step.tool.includes('GitHub.createRepo') && result.html_url && (
+                    <>
+                      Repository created successfully at{" "}
+                      <a href={result.html_url} target="_blank" rel="noopener noreferrer" className="underline">
+                        {result.html_url}
+                      </a>
+                    </>
+                  )}
+                  {step.tool.includes('Gmail.sendEmail') && (
+                    <>
+                      Email sent successfully to {result.to || step.args.to}
+                      {result.subject && ` with subject "${result.subject}"`}
+                    </>
+                  )}
+                  {!step.tool.includes('GitHub.createRepo') && !step.tool.includes('Gmail.sendEmail') && (
+                    <>Operation completed successfully</>
+                  )}
                 </div>
               )}
               
