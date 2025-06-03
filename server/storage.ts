@@ -18,7 +18,7 @@ export interface IStorage {
   // Secrets
   getSecret(provider: string): Promise<Secret | undefined>;
   createSecret(secret: InsertSecret): Promise<Secret>;
-  updateSecret(provider: string, encryptedKey: string): Promise<Secret | undefined>;
+  updateSecret(provider: string, encryptedKey: string, keyPreview: string): Promise<Secret | undefined>;
   deleteSecret(provider: string): Promise<boolean>;
 
   // Chat Messages
@@ -69,10 +69,10 @@ export class DatabaseStorage implements IStorage {
     return secret;
   }
 
-  async updateSecret(provider: string, encryptedKey: string): Promise<Secret | undefined> {
+  async updateSecret(provider: string, encryptedKey: string, keyPreview: string): Promise<Secret | undefined> {
     const [secret] = await db
       .update(secrets)
-      .set({ encryptedKey, updatedAt: new Date() })
+      .set({ encryptedKey, keyPreview, updatedAt: new Date() })
       .where(eq(secrets.provider, provider))
       .returning();
     return secret || undefined;

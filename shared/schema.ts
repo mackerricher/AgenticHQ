@@ -12,6 +12,7 @@ export const secrets = pgTable("secrets", {
   id: serial("id").primaryKey(),
   provider: text("provider").notNull().unique(), // "openai", "deepseek", "github", "gmail"
   encryptedKey: text("encrypted_key").notNull(),
+  keyPreview: text("key_preview").notNull(), // First 6 characters for display
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -52,6 +53,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertSecretSchema = createInsertSchema(secrets).pick({
   provider: true,
   encryptedKey: true,
+  keyPreview: true,
 });
 
 export const insertChatMessageSchema = createInsertSchema(chatMessages).pick({

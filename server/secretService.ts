@@ -67,12 +67,13 @@ class SecretService {
 
   async setKey(provider: string, rawKey: string): Promise<void> {
     const encryptedKey = this.encrypt(rawKey);
+    const keyPreview = rawKey.substring(0, 6);
     
     const existing = await storage.getSecret(provider);
     if (existing) {
-      await storage.updateSecret(provider, encryptedKey);
+      await storage.updateSecret(provider, encryptedKey, keyPreview);
     } else {
-      await storage.createSecret({ provider, encryptedKey });
+      await storage.createSecret({ provider, encryptedKey, keyPreview });
     }
     
     // Update cache
