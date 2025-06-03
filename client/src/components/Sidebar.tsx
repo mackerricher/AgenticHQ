@@ -7,13 +7,15 @@ import { api } from "@/lib/api";
 import { 
   MessageCircle, 
   Settings, 
-  Brain, 
-  Github, 
-  Mail, 
+  Users, 
+  Package, 
+  Wrench, 
+  Bot,
   Sun, 
   Moon,
   Leaf,
-  ExternalLink
+  ExternalLink,
+  Plug
 } from "lucide-react";
 
 interface SidebarProps {
@@ -84,7 +86,69 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
         <div className="mt-6">
           <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-            Settings
+            Workflow Builder
+          </h3>
+
+          <Link href="/clients">
+            <Button
+              variant={location === "/clients" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
+                location === "/clients" 
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+              }`}
+            >
+              <Bot className="h-4 w-4" />
+              Clients
+            </Button>
+          </Link>
+
+          <Link href="/agents">
+            <Button
+              variant={location === "/agents" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
+                location === "/agents" 
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+              }`}
+            >
+              <Users className="h-4 w-4" />
+              Agents
+            </Button>
+          </Link>
+
+          <Link href="/subagents">
+            <Button
+              variant={location === "/subagents" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
+                location === "/subagents" 
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+              }`}
+            >
+              <Package className="h-4 w-4" />
+              Sub-Agents
+            </Button>
+          </Link>
+
+          <Link href="/tools">
+            <Button
+              variant={location === "/tools" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
+                location === "/tools" 
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+              }`}
+            >
+              <Wrench className="h-4 w-4" />
+              Tools
+            </Button>
+          </Link>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+            Configuration
           </h3>
 
           <Button
@@ -93,34 +157,14 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
             className="w-full justify-between hover:bg-white/50 dark:hover:bg-violet-400/20 text-gray-700 dark:text-gray-300"
           >
             <div className="flex items-center gap-3">
-              <Brain className="h-4 w-4 text-pink-500" />
-              <span>LLM Providers</span>
+              <Plug className="h-4 w-4 text-green-500" />
+              <span>Connections</span>
             </div>
-            {getStatusIndicator(openaiStatus?.hasKey || false)}
-          </Button>
-
-          <Button
-            variant="ghost"
-            onClick={onSettingsClick}
-            className="w-full justify-between hover:bg-white/50 dark:hover:bg-violet-400/20 text-gray-700 dark:text-gray-300"
-          >
-            <div className="flex items-center gap-3">
-              <Github className="h-4 w-4 text-violet-500" />
-              <span>GitHub</span>
+            <div className="flex items-center gap-1">
+              {getStatusIndicator((openaiStatus as any)?.hasKey || false)}
+              {getStatusIndicator((githubStatus as any)?.hasKey || false)}
+              {getStatusIndicator((gmailStatus as any)?.hasKey || false)}
             </div>
-            {getStatusIndicator(githubStatus?.hasKey || false)}
-          </Button>
-
-          <Button
-            variant="ghost"
-            onClick={onSettingsClick}
-            className="w-full justify-between hover:bg-white/50 dark:hover:bg-violet-400/20 text-gray-700 dark:text-gray-300"
-          >
-            <div className="flex items-center gap-3">
-              <Mail className="h-4 w-4 text-blue-500" />
-              <span>Gmail</span>
-            </div>
-            {getStatusIndicator(gmailStatus?.hasKey || false)}
           </Button>
         </div>
       </nav>
