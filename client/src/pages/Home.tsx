@@ -25,7 +25,7 @@ export default function Home() {
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-pink-200 dark:border-violet-400/30 z-20 p-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-heading gradient-text">AgenticHQ</h1>
+          <h1 className="text-2xl font-heading gradient-text">AgenticHQ</h1>
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
