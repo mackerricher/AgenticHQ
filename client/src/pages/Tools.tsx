@@ -25,6 +25,27 @@ export default function Tools() {
       description: "Create markdown files with given text content",
       type: "local",
       category: "File Operations"
+    },
+    {
+      id: "github-create-repo",
+      name: "createRepo",
+      description: "Create a new GitHub repository",
+      type: "api",
+      category: "GitHub Operations"
+    },
+    {
+      id: "github-add-file",
+      name: "addFile",
+      description: "Add files to a GitHub repository",
+      type: "api",
+      category: "GitHub Operations"
+    },
+    {
+      id: "gmail-send-email",
+      name: "sendEmail",
+      description: "Send emails through Gmail",
+      type: "api",
+      category: "Email Operations"
     }
   ]);
   
