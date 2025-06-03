@@ -97,9 +97,17 @@ export class PlanRunner extends EventEmitter {
     
     for (const [key, value] of Object.entries(resolved)) {
       if (key === 'contentRef' && typeof value === 'number') {
-        const content = this.contentRefs.get(value);
-        if (content) {
-          resolved.content = content.content || content;
+        const contentObj = this.contentRefs.get(value);
+        if (contentObj) {
+          // Extract the actual content string from the FileCreator result
+          if (contentObj.content) {
+            resolved.content = contentObj.content;
+          } else if (typeof contentObj === 'string') {
+            resolved.content = contentObj;
+          } else {
+            // Fallback: try to find content in common properties
+            resolved.content = contentObj.text || contentObj.body || contentObj.data || String(contentObj);
+          }
           delete resolved.contentRef;
         }
       }
