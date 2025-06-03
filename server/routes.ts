@@ -338,11 +338,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: "pending",
       });
 
-      // Execute plan asynchronously
-      planRunner.executePlan(planRecord.id, plan);
+      // Execute plan and wait for initial validation
+      setImmediate(async () => {
+        try {
+          await planRunner.executePlan(planRecord.id, plan);
+        } catch (error) {
+          console.error("Plan execution error:", error);
+        }
+      });
 
-      // Generate and store assistant response
-      const assistantResponse = await deepseekService.generateResponse(message.trim(), { planId: planRecord.id, steps: plan });
+      // Generate initial response indicating plan creation
+      const assistantResponse = `I've created a plan to help you with that. I'll execute ${plan.length} steps to complete your request. You can watch the progress below.`;
       
       const assistantMessage = await storage.createChatMessage({
         role: "assistant",

@@ -27,8 +27,23 @@ export class PlanRunner extends EventEmitter {
       try {
         const result = await this.executeStep(step);
         
+        if (!result.success) {
+          // Handle step failure
+          await storage.updatePlanExecution(execution.id, {
+            status: "failed",
+            error: result.error || "Step failed",
+          });
+
+          this.emit('stepError', { planId, stepIndex: i, error: result.error });
+          
+          // Stop execution on error
+          await storage.updatePlan(planId, { status: "failed", currentStep: i });
+          this.emit('planError', { planId, error: result.error });
+          return;
+        }
+        
         // Store content references for later steps
-        if (result.success && result.result && typeof result.result === 'object') {
+        if (result.result && typeof result.result === 'object') {
           this.contentRefs.set(i, result.result);
         }
 
