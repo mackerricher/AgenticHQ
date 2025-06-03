@@ -279,6 +279,83 @@ export default function Clients() {
               </Form>
             </DialogContent>
           </Dialog>
+
+          {/* Edit Client Modal */}
+          <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+            <DialogContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-gray-900 dark:text-gray-100">Edit Client</DialogTitle>
+              </DialogHeader>
+              <Form {...editForm}>
+                <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-6 py-4">
+                  <FormField
+                    control={editForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="mb-2 block">Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter client name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={editForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="mb-2 block">Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Describe what this client does" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div>
+                    <h3 className="text-sm font-medium mb-3">Available Agents</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {availableAgents.map((agent) => (
+                        <Button
+                          key={agent.id}
+                          type="button"
+                          variant={selectedAgents.includes(agent.id.toString()) ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => toggleAgent(agent.id)}
+                          className="justify-start h-auto p-3"
+                        >
+                          <div className="text-left">
+                            <div className="font-medium">{agent.name}</div>
+                            <div className="text-xs opacity-70">{agent.description}</div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsEditModalOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={updateClientMutation.isPending}
+                      className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
+                    >
+                      {updateClientMutation.isPending ? "Updating..." : "Update Client"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {clients.length === 0 ? (
@@ -298,30 +375,46 @@ export default function Clients() {
                     <CardTitle className="text-lg font-medium text-gray-900 dark:text-gray-100">
                       {client.name}
                     </CardTitle>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteClient(client.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditClient(client)}
+                        className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteClient(client.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {client.description}
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {Array.isArray(client.agents) && client.agents.length > 0 ? (
-                      client.agents.map((agentId, index) => (
-                        <Badge key={index} variant="secondary">
-                          {agentId}
-                        </Badge>
-                      ))
-                    ) : (
-                      <span className="text-sm text-gray-500 dark:text-gray-400">No agents assigned</span>
-                    )}
+                  <div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Agents:</span>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {Array.isArray(client.agents) && client.agents.length > 0 ? (
+                        client.agents.map((agentId, index) => {
+                          const agent = availableAgents?.find(a => a.id === parseInt(agentId));
+                          return (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {agent?.name || `Agent ${agentId}`}
+                            </Badge>
+                          );
+                        })
+                      ) : (
+                        <span className="text-xs text-gray-500 dark:text-gray-400">No agents assigned</span>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
