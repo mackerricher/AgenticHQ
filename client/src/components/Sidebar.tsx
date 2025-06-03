@@ -49,101 +49,138 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
   };
 
   return (
-    <aside className="w-64 bg-gray-800 border-r border-gray-700 flex flex-col h-full">
-      {/* Logo Section */}
-      <div className="p-4 border-b border-gray-700">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-blue-500 flex items-center justify-center">
-            <div className="w-6 h-6 relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full opacity-80"></div>
-              <div className="absolute top-1 left-1 w-1 h-1 bg-white rounded-full"></div>
-              <div className="absolute bottom-1 left-1 w-1 h-1 bg-white rounded-full"></div>
-              <div className="absolute bottom-1 right-1 w-1 h-1 bg-white rounded-full"></div>
-              <div className="absolute top-1/2 left-1/2 w-0.5 h-2 bg-white transform -translate-x-1/2 -translate-y-1/2"></div>
-            </div>
-          </div>
-          <h1 className="text-white font-semibold text-lg">AgenticHQ</h1>
-        </div>
-      </div>
-
-      {/* Chat Section */}
-      <div className="p-3 border-b border-gray-700">
-        <h3 className="text-gray-400 text-xs uppercase tracking-wider mb-2">Chat</h3>
-        <Link href="/">
+    <aside className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-pink-200 dark:border-violet-400/30 flex flex-col h-full">
+      {/* Header */}
+      <div className="p-6 border-b border-pink-200 dark:border-violet-400/30">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-heading gradient-text">AgenticHQ</h1>
           <Button
             variant="ghost"
-            className={`w-full justify-start gap-3 text-left ${
+            size="sm"
+            onClick={toggleTheme}
+            className="p-2 rounded-xl bg-gradient-to-r from-pink-400 to-violet-400 text-white hover:scale-110 transition-transform duration-200"
+          >
+            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          </Button>
+        </div>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+          AI-powered workflow automation
+        </p>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4 space-y-2">
+        <Link href="/">
+          <Button
+            variant={location === "/" ? "default" : "ghost"}
+            className={`w-full justify-start gap-3 ${
               location === "/" 
-                ? "bg-gray-700 text-white" 
-                : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                : "hover:bg-white/50 dark:hover:bg-violet-400/20"
             }`}
           >
             <MessageCircle className="h-4 w-4" />
-            <span className="text-sm">General Chat</span>
+            Chat
           </Button>
         </Link>
-      </div>
 
-      {/* Workflow Section */}
-      <div className="p-3 border-b border-gray-700">
-        <h3 className="text-gray-400 text-xs uppercase tracking-wider mb-2">Workflow</h3>
-        <div className="space-y-1">
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+            Workflow Builder
+          </h3>
+
           <Link href="/clients">
             <Button
-              variant="ghost"
-              className={`w-full justify-start gap-3 text-left ${
+              variant={location === "/clients" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
                 location === "/clients" 
-                  ? "bg-gray-700 text-white" 
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
               }`}
             >
-              <Users className="h-4 w-4" />
-              <span className="text-sm">Clients</span>
-              <span className="ml-auto text-xs bg-gray-600 px-1.5 py-0.5 rounded">1</span>
+              <Bot className="h-4 w-4" />
+              Clients
             </Button>
           </Link>
 
           <Link href="/agents">
             <Button
-              variant="ghost"
-              className={`w-full justify-start gap-3 text-left ${
+              variant={location === "/agents" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
                 location === "/agents" 
-                  ? "bg-gray-700 text-white" 
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
               }`}
             >
-              <Bot className="h-4 w-4" />
-              <span className="text-sm">Servers</span>
-              <span className="ml-auto text-xs bg-gray-600 px-1.5 py-0.5 rounded">3</span>
+              <Users className="h-4 w-4" />
+              Agents
+            </Button>
+          </Link>
+
+          <Link href="/subagents">
+            <Button
+              variant={location === "/subagents" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
+                location === "/subagents" 
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+              }`}
+            >
+              <Package className="h-4 w-4" />
+              Sub-Agents
+            </Button>
+          </Link>
+
+          <Link href="/tools">
+            <Button
+              variant={location === "/tools" ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 ${
+                location === "/tools" 
+                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
+                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+              }`}
+            >
+              <Wrench className="h-4 w-4" />
+              Tools
             </Button>
           </Link>
         </div>
-      </div>
 
-      {/* Settings Section */}
-      <div className="mt-auto p-3 border-t border-gray-700">
-        <Button
-          variant="ghost"
-          onClick={onSettingsClick}
-          className="w-full justify-start gap-3 text-left text-gray-300 hover:bg-gray-700 hover:text-white"
-        >
-          <Settings className="h-4 w-4" />
-          <span className="text-sm">Settings</span>
-        </Button>
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+            Configuration
+          </h3>
 
-        <Button
-          variant="ghost"
-          onClick={onSettingsClick}
-          className="w-full justify-start gap-3 text-left text-gray-300 hover:bg-gray-700 hover:text-white mt-1"
-        >
-          <Plug className="h-4 w-4" />
-          <span className="text-sm">LLM Connections</span>
-          <div className="ml-auto flex items-center gap-1">
-            {getStatusIndicator((openaiStatus as any)?.hasKey || false)}
-            {getStatusIndicator((githubStatus as any)?.hasKey || false)}
-            {getStatusIndicator((gmailStatus as any)?.hasKey || false)}
-          </div>
-        </Button>
+          <Button
+            variant="ghost"
+            onClick={onSettingsClick}
+            className="w-full justify-between hover:bg-white/50 dark:hover:bg-violet-400/20 text-gray-700 dark:text-gray-300"
+          >
+            <div className="flex items-center gap-3">
+              <Plug className="h-4 w-4 text-green-500" />
+              <span>Connections</span>
+            </div>
+            <div className="flex items-center gap-1">
+              {getStatusIndicator((openaiStatus as any)?.hasKey || false)}
+              {getStatusIndicator((githubStatus as any)?.hasKey || false)}
+              {getStatusIndicator((gmailStatus as any)?.hasKey || false)}
+            </div>
+          </Button>
+        </div>
+      </nav>
+
+      {/* Eco Footer */}
+      <div className="p-4 border-t border-pink-200 dark:border-violet-400/30">
+        <Link href="/eco-pledge">
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+          >
+            <Leaf className="h-4 w-4" />
+            <span>Eco Pledge</span>
+            <ExternalLink className="h-3 w-3 ml-auto" />
+          </Button>
+        </Link>
       </div>
     </aside>
   );
