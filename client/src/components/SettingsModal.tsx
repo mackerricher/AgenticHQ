@@ -214,23 +214,25 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                           placeholder="sk-..."
                           value={keys.openai || ""}
                           onChange={(e) => setKeys(prev => ({ ...prev, openai: e.target.value }))}
-                          className="pr-20"
+                          className="mb-3"
                         />
-                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                        <div className="flex gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => toggleShowKey("openai")}
+                            className="flex-1"
                           >
-                            {showKeys.openai ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showKeys.openai ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                            {showKeys.openai ? "Hide" : "Show"}
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="sm"
                             onClick={() => handleSaveKey("openai")}
                             disabled={saveKeyMutation.isPending || !keys.openai?.trim()}
+                            className="flex-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
                           >
-                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+                            Save
                           </Button>
                         </div>
                       </div>
@@ -273,23 +275,25 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                           placeholder="Enter DeepSeek API key..."
                           value={keys.deepseek || ""}
                           onChange={(e) => setKeys(prev => ({ ...prev, deepseek: e.target.value }))}
-                          className="pr-20"
+                          className="mb-3"
                         />
-                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                        <div className="flex gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => toggleShowKey("deepseek")}
+                            className="flex-1"
                           >
-                            {showKeys.deepseek ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showKeys.deepseek ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                            {showKeys.deepseek ? "Hide" : "Show"}
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="sm"
                             onClick={() => handleSaveKey("deepseek")}
                             disabled={saveKeyMutation.isPending || !keys.deepseek?.trim()}
+                            className="flex-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
                           >
-                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+                            Save
                           </Button>
                         </div>
                       </div>
@@ -333,23 +337,25 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                           placeholder="ghp_..."
                           value={keys.github || ""}
                           onChange={(e) => setKeys(prev => ({ ...prev, github: e.target.value }))}
-                          className="pr-20"
+                          className="mb-3"
                         />
-                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                        <div className="flex gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => toggleShowKey("github")}
+                            className="flex-1"
                           >
-                            {showKeys.github ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showKeys.github ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                            {showKeys.github ? "Hide" : "Show"}
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="sm"
                             onClick={() => handleSaveKey("github")}
                             disabled={saveKeyMutation.isPending || !keys.github?.trim()}
+                            className="flex-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
                           >
-                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+                            Save
                           </Button>
                         </div>
                       </div>
@@ -396,23 +402,25 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                           placeholder="Paste Gmail OAuth credentials JSON..."
                           value={keys.gmail || ""}
                           onChange={(e) => setKeys(prev => ({ ...prev, gmail: e.target.value }))}
-                          className="pr-20"
+                          className="mb-3"
                         />
-                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                        <div className="flex gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => toggleShowKey("gmail")}
+                            className="flex-1"
                           >
-                            {showKeys.gmail ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            {showKeys.gmail ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                            {showKeys.gmail ? "Hide" : "Show"}
                           </Button>
                           <Button
-                            variant="ghost"
-                            size="sm"
                             onClick={() => handleSaveKey("gmail")}
                             disabled={saveKeyMutation.isPending || !keys.gmail?.trim()}
+                            className="flex-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
                           >
-                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                            {saveKeyMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
+                            Save
                           </Button>
                         </div>
                       </div>
