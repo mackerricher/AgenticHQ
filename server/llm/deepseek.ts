@@ -45,7 +45,7 @@ Example plan format:
   "steps": [
     { "tool": "GitHub.createRepo", "args": { "name": "MyProject", "description": "A new project" } },
     { "tool": "FileCreator.createMarkdown", "args": { "filename": "README.md", "contents": "# MyProject\\n\\nA comprehensive description of this project and its purpose.\\n\\n## Installation\\n\\n1. First, install Node.js:\\n   \`\`\`bash\\n   brew install node\\n   \`\`\`\\n\\n2. Clone this repository:\\n   \`\`\`bash\\n   git clone https://github.com/user/MyProject.git\\n   cd MyProject\\n   \`\`\`\\n\\n3. Install dependencies:\\n   \`\`\`bash\\n   npm install\\n   \`\`\`\\n\\n## Usage\\n\\nRun the application:\\n\\n\`\`\`bash\\nnpm start\\n\`\`\`\\n\\n## Features\\n\\n- Feature 1: Description\\n- Feature 2: Description\\n- Feature 3: Description" } },
-    { "tool": "GitHub.addFile", "args": { "repo": "MyProject", "path": "README.md", "contentRef": 1 } }
+    { "tool": "GitHub.addFile", "args": { "repo": "MyProject", "path": "README.md", "contentRef": 2 } }
   ]
 }
 
