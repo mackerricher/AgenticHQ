@@ -42,9 +42,9 @@ export class PlanRunner extends EventEmitter {
           return;
         }
         
-        // Store content references for later steps
+        // Store content references for later steps (1-indexed for user reference)
         if (result.result && typeof result.result === 'object') {
-          this.contentRefs.set(i, result.result);
+          this.contentRefs.set(i + 1, result.result);
         }
 
         await storage.updatePlanExecution(execution.id, {
