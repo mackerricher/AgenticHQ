@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRoute } from "wouter";
+import { useRoute, useLocation } from "wouter";
 import { 
   Send, 
   Paperclip, 
@@ -14,7 +14,8 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  Loader2
+  Loader2,
+  ArrowLeft
 } from "lucide-react";
 
 interface ChatMessage {
@@ -34,6 +35,7 @@ interface PlanStep {
 export default function Chat() {
   const [match, params] = useRoute("/chat/:clientId");
   const clientId = params?.clientId ? parseInt(params.clientId) : null;
+  const [, setLocation] = useLocation();
   
   const [message, setMessage] = useState("");
   const [activePlanId, setActivePlanId] = useState<number | null>(null);
@@ -186,6 +188,26 @@ export default function Chat() {
 
   return (
     <div className="flex-1 flex flex-col h-full">
+      {/* Client Navigation Bar */}
+      {client && (
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocation("/clients")}
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <div>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Chatting with</span>
+              <h2 className="font-medium text-gray-900 dark:text-gray-100">{client.name}</h2>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 pb-32">
         {messages.length === 0 && (
