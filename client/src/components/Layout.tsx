@@ -17,7 +17,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex relative overflow-hidden bg-white dark:bg-gray-900">
       {/* Desktop Sidebar */}
-      <div className="hidden md:block">
+      <div className="hidden md:block fixed left-0 top-0 h-full z-10">
         <Sidebar onSettingsClick={() => setShowSettings(true)} />
       </div>
       
@@ -56,7 +56,7 @@ export default function Layout({ children }: LayoutProps) {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto pt-16 md:pt-0">
+      <main className="flex-1 overflow-auto pt-16 md:pt-0 md:ml-80">
         {children}
       </main>
 
