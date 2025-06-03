@@ -36,11 +36,11 @@ export default function Agents() {
   const getAgentIcon = (type: string) => {
     switch (type) {
       case "github":
-        return <Github className="h-5 w-5 text-violet-500" />;
+        return <Github className="h-5 w-5 text-gray-600 dark:text-gray-400" />;
       case "gmail":
-        return <Mail className="h-5 w-5 text-blue-500" />;
+        return <Mail className="h-5 w-5 text-gray-600 dark:text-gray-400" />;
       default:
-        return <Users className="h-5 w-5 text-gray-500" />;
+        return <Users className="h-5 w-5 text-gray-600 dark:text-gray-400" />;
     }
   };
 
@@ -49,13 +49,13 @@ export default function Agents() {
       <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-heading gradient-text mb-2">Agents</h1>
+              <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Agents</h1>
               <p className="text-gray-600 dark:text-gray-300">
                 Manage your workflow agents that combine tools and sub-agents
               </p>
             </div>
             <Button 
-              className="bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg hover:scale-105 transition-transform"
+              className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Agent
@@ -66,7 +66,7 @@ export default function Agents() {
             {agents.map((agent) => (
               <Card 
                 key={agent.id}
-                className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-pink-200 dark:border-violet-400/30 hover:scale-105 transition-transform duration-200"
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
               >
                 <CardHeader>
                   <div className="flex items-center gap-3">
@@ -123,7 +123,6 @@ export default function Agents() {
                 </CardContent>
               </Card>
             ))}
-          </div>
         </div>
       </div>
     </div>

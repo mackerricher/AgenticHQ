@@ -67,14 +67,11 @@ export default function SubAgents() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-300 via-blue-200 to-violet-200 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
-      <div className="glitter-overlay fixed inset-0 pointer-events-none"></div>
-      
-      <div className="relative z-10 p-6">
-        <div className="max-w-6xl mx-auto">
+    <div className="flex-1 p-6 bg-white dark:bg-gray-900">
+      <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-heading gradient-text mb-2">Sub-Agents</h1>
+              <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Sub-Agents</h1>
               <p className="text-gray-600 dark:text-gray-300">
                 Create reusable sub-agents that can be attached to multiple agents
               </p>
@@ -82,7 +79,7 @@ export default function SubAgents() {
             
             <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg hover:scale-105 transition-transform">
+                <Button className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200">
                   <Plus className="h-4 w-4 mr-2" />
                   Create Sub-Agent
                 </Button>
