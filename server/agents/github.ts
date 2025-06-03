@@ -1,4 +1,5 @@
 import { secretService } from "../secretService";
+import { Octokit } from "@octokit/rest";
 
 export class GitHubAgent {
   async createRepo(name: string, description: string): Promise<{ success: boolean; result?: any; error?: string }> {
@@ -11,23 +12,48 @@ export class GitHubAgent {
         };
       }
 
-      // For MVP, we'll simulate the API call with a realistic response
-      // In production, this would use the actual GitHub API
-      const mockResult = {
-        id: Math.floor(Math.random() * 100000),
-        name,
-        full_name: `user/${name}`,
-        description,
-        html_url: `https://github.com/user/${name}`,
-        clone_url: `https://github.com/user/${name}.git`,
-        created_at: new Date().toISOString(),
-      };
+      // Create Octokit instance with the user's token
+      const octokit = new Octokit({
+        auth: token,
+      });
 
-      return { success: true, result: mockResult };
+      // Create the repository using GitHub API
+      const response = await octokit.rest.repos.createForAuthenticatedUser({
+        name,
+        description: description || `Repository created by AgenticHQ`,
+        private: false,
+        auto_init: true,
+      });
+
+      const repo = response.data;
+      return { 
+        success: true, 
+        result: {
+          id: repo.id,
+          name: repo.name,
+          full_name: repo.full_name,
+          description: repo.description,
+          html_url: repo.html_url,
+          clone_url: repo.clone_url,
+          created_at: repo.created_at,
+        }
+      };
     } catch (error) {
+      let errorMessage = "Failed to create repository";
+      
+      if (error instanceof Error) {
+        if (error.message.includes("401")) {
+          errorMessage = "Invalid GitHub token. Please check your Personal Access Token in settings.";
+        } else if (error.message.includes("422")) {
+          errorMessage = "Repository name already exists or is invalid.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : "Failed to create repository" 
+        error: errorMessage
       };
     }
   }
