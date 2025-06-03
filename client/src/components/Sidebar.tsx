@@ -48,9 +48,9 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
   };
 
   return (
-    <aside className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-pink-200 dark:border-violet-400/30 flex flex-col h-full">
+    <aside className="w-80 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
       {/* Header with Home link and Theme Toggle */}
-      <div className="p-6 border-b border-pink-200 dark:border-violet-400/30">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <Link href="/">
             <div className="cursor-pointer hover:opacity-80 transition-opacity">
@@ -65,7 +65,7 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
             variant="ghost"
             size="sm"
             onClick={toggleTheme}
-            className="p-2 rounded-xl bg-gradient-to-r from-pink-400 to-violet-400 text-white hover:scale-110 transition-transform duration-200"
+            className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
           >
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </Button>
@@ -79,8 +79,8 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
             variant={location === "/" ? "default" : "ghost"}
             className={`w-full justify-start gap-3 ${
               location === "/" 
-                ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
-                : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+                ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             }`}
           >
             <MessageCircle className="h-4 w-4" />

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -60,14 +61,20 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-gray-100 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen font-serif antialiased transition-colors duration-500;
-    font-family: 'Crimson Text', serif;
-    font-size: 18px;
-    line-height: 1.7;
+    @apply bg-white dark:bg-gray-900 min-h-screen antialiased transition-colors duration-200;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgb(13, 13, 13);
+  }
+
+  .dark body {
+    color: rgb(236, 236, 241);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lilita One', cursive;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 600;
   }
 }
 
@@ -77,27 +84,29 @@
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, #E11D48, #7C3AED, #2563EB);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 1.4rem;
-    font-weight: 700;
+    color: rgb(13, 13, 13);
+    font-size: 1.125rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
   }
 
-  /* Improved typography scale - larger fonts */
-  .text-xs { font-size: 0.95rem !important; }
-  .text-sm { font-size: 1.1rem !important; }
-  .text-base { font-size: 1.25rem !important; }
-  .text-lg { font-size: 1.4rem !important; }
-  .text-xl { font-size: 1.6rem !important; }
-  .text-2xl { font-size: 1.9rem !important; }
-  .text-3xl { font-size: 2.3rem !important; }
+  .dark .gradient-text {
+    color: rgb(236, 236, 241);
+  }
 
-  /* Better spacing for components */
-  .card-content { @apply space-y-4 text-base leading-relaxed; }
-  .button-text { @apply text-base font-medium; }
-  .nav-text { @apply text-lg font-medium; }
+  /* ChatGPT-style typography scale */
+  .text-xs { font-size: 0.75rem !important; }
+  .text-sm { font-size: 0.875rem !important; }
+  .text-base { font-size: 1rem !important; }
+  .text-lg { font-size: 1.125rem !important; }
+  .text-xl { font-size: 1.25rem !important; }
+  .text-2xl { font-size: 1.5rem !important; }
+  .text-3xl { font-size: 1.875rem !important; }
+
+  /* Clean component styling */
+  .card-content { @apply space-y-3 text-sm leading-relaxed; }
+  .button-text { @apply text-sm font-medium; }
+  .nav-text { @apply text-sm font-medium; }
   
   .glassmorphism {
     background: rgba(255, 255, 255, 0.1);
