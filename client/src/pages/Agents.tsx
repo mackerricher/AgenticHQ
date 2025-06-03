@@ -78,6 +78,37 @@ export default function Agents() {
     },
   });
 
+  const updateAgentMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: CreateAgentForm }) => {
+      const response = await fetch(`/api/agents/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error("Failed to update agent");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/agents"] });
+      setIsEditModalOpen(false);
+      setEditingAgent(null);
+      editForm.reset();
+      setSelectedTools([]);
+      setSelectedSubAgents([]);
+      toast({
+        title: "Success",
+        description: "Agent updated successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update agent",
+        variant: "destructive",
+      });
+    },
+  });
+
   const deleteAgentMutation = useMutation({
     mutationFn: async (id: number) => {
       const response = await fetch(`/api/agents/${id}`, {
@@ -113,6 +144,17 @@ export default function Agents() {
     },
   });
 
+  const editForm = useForm<CreateAgentForm>({
+    resolver: zodResolver(createAgentFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      tools: [],
+      subAgents: [],
+      type: "custom",
+    },
+  });
+
   const onSubmit = (data: CreateAgentForm) => {
     const agentData = {
       ...data,
@@ -121,6 +163,17 @@ export default function Agents() {
       type: "custom",
     };
     createAgentMutation.mutate(agentData);
+  };
+
+  const onEditSubmit = (data: CreateAgentForm) => {
+    if (!editingAgent) return;
+    const agentData = {
+      ...data,
+      tools: selectedTools,
+      subAgents: selectedSubAgents,
+      type: "custom",
+    };
+    updateAgentMutation.mutate({ id: editingAgent.id, data: agentData });
   };
 
   const toggleTool = (toolId: string) => {
@@ -143,6 +196,11 @@ export default function Agents() {
     setEditingAgent(agent);
     setSelectedTools(Array.isArray(agent.tools) ? agent.tools : []);
     setSelectedSubAgents(Array.isArray(agent.subAgents) ? agent.subAgents : []);
+    editForm.reset({
+      name: agent.name,
+      description: agent.description,
+      type: agent.type,
+    });
     setIsEditModalOpen(true);
   };
 
@@ -295,6 +353,104 @@ export default function Agents() {
                       className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
                     >
                       {createAgentMutation.isPending ? "Creating..." : "Create Agent"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+
+          {/* Edit Agent Modal */}
+          <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+            <DialogContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-gray-900 dark:text-gray-100">Edit Agent</DialogTitle>
+              </DialogHeader>
+              <Form {...editForm}>
+                <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-6 py-4">
+                  <FormField
+                    control={editForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="mb-2 block">Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter agent name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={editForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="mb-2 block">Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Describe what this agent does" rows={3} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div>
+                    <h3 className="text-sm font-medium mb-3">Tools</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {availableTools.map((tool) => (
+                        <Button
+                          key={tool.id}
+                          type="button"
+                          variant={selectedTools.includes(tool.id) ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => toggleTool(tool.id)}
+                          className="justify-start h-auto p-3"
+                        >
+                          <div className="text-left">
+                            <div className="font-medium">{tool.name}</div>
+                            <div className="text-xs opacity-70">{tool.description}</div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm font-medium mb-3">Sub-Agents</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {availableSubAgents.map((subAgent) => (
+                        <Button
+                          key={subAgent.id}
+                          type="button"
+                          variant={selectedSubAgents.includes(subAgent.id.toString()) ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => toggleSubAgent(subAgent.id)}
+                          className="justify-start h-auto p-3"
+                        >
+                          <div className="text-left">
+                            <div className="font-medium">{subAgent.name}</div>
+                            <div className="text-xs opacity-70">{subAgent.description}</div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsEditModalOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      type="submit"
+                      disabled={updateAgentMutation.isPending}
+                      className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
+                    >
+                      {updateAgentMutation.isPending ? "Updating..." : "Update Agent"}
                     </Button>
                   </DialogFooter>
                 </form>
