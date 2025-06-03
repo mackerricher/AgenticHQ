@@ -7,7 +7,7 @@ interface ThemeProviderContextType {
   toggleTheme: () => void;
 }
 
-const ThemeProviderContext = createContext<ThemeProviderContextType | undefined>(undefined);
+export const ThemeProviderContext = createContext<ThemeProviderContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
