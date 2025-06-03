@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: agentichq
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: agentichq
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentichq"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://agentichq:password@postgres:5432/agentichq
+      - PGUSER=agentichq
+      - PGPASSWORD=password
+      - PGDATABASE=agentichq
+      - PGHOST=postgres
+      - PGPORT=5432
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

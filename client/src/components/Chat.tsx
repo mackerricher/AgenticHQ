@@ -407,7 +407,7 @@ export default function Chat() {
       )}
       
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4" style={{paddingTop: '80px', paddingBottom: '200px'}}>
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4" style={{paddingTop: '100px', paddingBottom: '200px'}}>
         {messages.length === 0 && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
