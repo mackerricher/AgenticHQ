@@ -14,13 +14,15 @@ export interface KeyStatus {
 
 export const api = {
   chat: {
-    send: async (userMessage: string): Promise<ChatResponse> => {
-      const response = await apiRequest("POST", "/api/chat", { userMessage });
+    send: async (userMessage: string, clientId?: number): Promise<ChatResponse> => {
+      const endpoint = clientId ? `/api/chat/send/${clientId}` : "/api/chat";
+      const response = await apiRequest("POST", endpoint, { message: userMessage });
       return response.json();
     },
     
-    getHistory: async () => {
-      const response = await apiRequest("GET", "/api/chat/history");
+    getHistory: async (clientId?: number) => {
+      const endpoint = clientId ? `/api/chat/history/${clientId}` : "/api/chat/history";
+      const response = await apiRequest("GET", endpoint);
       return response.json();
     },
     
