@@ -142,7 +142,15 @@ function PlanStepsDisplay({ planId, activePlanId }: PlanStepsDisplayProps) {
                       {result.subject && ` with subject "${result.subject}"`}
                     </>
                   )}
-                  {!step.tool.includes('GitHub.createRepo') && !step.tool.includes('Gmail.sendEmail') && (
+                  {step.tool.includes('FileCreator.createMarkdown') && (
+                    <>
+                      File "{result.fileName}" created successfully ({result.size} characters)
+                      <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Path: {result.localPath}
+                      </div>
+                    </>
+                  )}
+                  {!step.tool.includes('GitHub.createRepo') && !step.tool.includes('Gmail.sendEmail') && !step.tool.includes('FileCreator.createMarkdown') && (
                     <>Operation completed successfully</>
                   )}
                 </div>
@@ -292,7 +300,9 @@ export default function Chat() {
 
   const handleSend = () => {
     if (!message.trim() || sendMessageMutation.isPending) return;
-    sendMessageMutation.mutate(message);
+    const messageToSend = message;
+    setMessage(""); // Clear input immediately
+    sendMessageMutation.mutate(messageToSend);
   };
 
   const handleClearConversation = () => {

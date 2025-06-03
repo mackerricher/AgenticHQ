@@ -2,21 +2,21 @@ export class FileCreatorAgent {
   private createdFiles: Map<number, string> = new Map();
   private currentId = 1;
 
-  async createMarkdown(text: string): Promise<{ success: boolean; result?: any; error?: string }> {
+  async createMarkdown(filename: string, contents: string): Promise<{ success: boolean; result?: any; error?: string }> {
     try {
       const fileId = this.currentId++;
-      const fileName = `file_${fileId}.md`;
+      const fileName = filename.endsWith('.md') ? filename : `${filename}.md`;
       const localPath = `/tmp/${fileName}`;
       
       // Store the content in memory (simulating file creation)
-      this.createdFiles.set(fileId, text);
+      this.createdFiles.set(fileId, contents);
 
       const result = {
         id: fileId,
         fileName,
         localPath,
-        content: text,
-        size: text.length,
+        content: contents,
+        size: contents.length,
         createdAt: new Date().toISOString(),
       };
 
@@ -35,7 +35,7 @@ export class FileCreatorAgent {
 
   getAvailableTools(): string[] {
     return [
-      "FileCreator.createMarkdown(text) - Create a markdown file with the given text content"
+      "FileCreator.createMarkdown(filename, contents) - Create a markdown file with the specified filename and contents"
     ];
   }
 }

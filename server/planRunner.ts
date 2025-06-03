@@ -131,7 +131,7 @@ export class PlanRunner extends EventEmitter {
   private async executeFileCreatorTool(toolName: string, args: Record<string, any>): Promise<{ success: boolean; result?: any; error?: string }> {
     switch (toolName) {
       case 'createMarkdown':
-        return fileCreatorAgent.createMarkdown(args.text);
+        return fileCreatorAgent.createMarkdown(args.filename, args.contents);
       default:
         throw new Error(`Unknown FileCreator tool: ${toolName}`);
     }
