@@ -45,11 +45,8 @@ export default function Agents() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-300 via-blue-200 to-violet-200 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
-      <div className="glitter-overlay fixed inset-0 pointer-events-none"></div>
-      
-      <div className="relative z-10 p-6">
-        <div className="max-w-6xl mx-auto">
+    <div className="flex-1 p-6 bg-white dark:bg-gray-900">
+      <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-heading gradient-text mb-2">Agents</h1>

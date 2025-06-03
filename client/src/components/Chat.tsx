@@ -169,7 +169,7 @@ export default function Chat() {
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-gray-600 dark:text-gray-400" />
       </div>
     );
   }
@@ -184,23 +184,23 @@ export default function Chat() {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl mx-auto"
           >
-            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-pink-200 dark:border-violet-400/30">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 to-violet-400 flex items-center justify-center">
-                  <Bot className="h-5 w-5 text-white" />
+                <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                  <Bot className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-heading text-lg gradient-text mb-2">Welcome to AgenticHQ! ✨</h3>
+                  <h3 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">Welcome to AgenticHQ</h3>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                     I'm your AI workflow assistant! I can help you automate multi-step tasks by creating plans and executing them step-by-step. 
                     Try asking me to do something like:
                   </p>
                   <div className="mt-4 space-y-2">
-                    <div className="bg-gradient-to-r from-pink-100 to-violet-100 dark:from-violet-900/30 dark:to-pink-900/30 rounded-lg p-3 text-sm">
-                      <span className="font-mono">"Create a GitHub repo for my project and email me when it's ready"</span>
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-sm">
+                      <span className="font-mono text-gray-800 dark:text-gray-200">"Create a GitHub repo for my project and email me when it's ready"</span>
                     </div>
-                    <div className="bg-gradient-to-r from-pink-100 to-violet-100 dark:from-violet-900/30 dark:to-pink-900/30 rounded-lg p-3 text-sm">
-                      <span className="font-mono">"Write a README file and add it to my repository"</span>
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-sm">
+                      <span className="font-mono text-gray-800 dark:text-gray-200">"Write a README file and add it to my repository"</span>
                     </div>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export default function Chat() {
             >
               {msg.role === "user" ? (
                 <div className="flex justify-end">
-                  <div className="bg-gradient-to-r from-pink-400 to-violet-400 rounded-xl p-4 max-w-md shadow-lg text-white">
+                  <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4 max-w-md text-gray-900 dark:text-gray-100">
                     <p>{msg.content}</p>
                     <div className="text-xs opacity-75 mt-2">
                       {new Date(msg.createdAt).toLocaleTimeString()}
@@ -228,10 +228,10 @@ export default function Chat() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-pink-200 dark:border-violet-400/30">
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 to-violet-400 flex items-center justify-center">
-                      <Bot className="h-5 w-5 text-white" />
+                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                      <Bot className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                     </div>
                     <div className="flex-1">
                       <div className="text-gray-700 dark:text-gray-300 leading-relaxed">
