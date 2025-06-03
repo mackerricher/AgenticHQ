@@ -1,5 +1,10 @@
 import { secretService } from "../secretService";
-import { google } from "googleapis";
+import nodemailer from 'nodemailer';
+
+interface GmailCredentials {
+  email: string;
+  appPassword: string;
+}
 
 export class GmailAgent {
   async sendEmail(to: string, subject: string, body: string): Promise<{ success: boolean; result?: any; error?: string }> {
@@ -8,65 +13,53 @@ export class GmailAgent {
       if (!credentials) {
         return { 
           success: false, 
-          error: "Gmail credentials not configured. Please add your Gmail service account credentials in settings." 
+          error: "Gmail credentials not configured. Please add your Gmail email and app password in settings." 
         };
       }
 
-      // Parse the service account credentials
-      let serviceAccount;
+      // Parse the Gmail SMTP credentials
+      let gmailConfig: GmailCredentials;
       try {
-        serviceAccount = JSON.parse(credentials);
+        gmailConfig = JSON.parse(credentials);
       } catch (parseError) {
         return {
           success: false,
-          error: "Invalid Gmail credentials format. Please provide valid service account JSON."
+          error: "Invalid Gmail credentials format. Please provide valid JSON with email and appPassword fields."
         };
       }
 
-      // Create JWT auth client with domain-wide delegation
-      const auth = new google.auth.JWT(
-        serviceAccount.client_email,
-        undefined,
-        serviceAccount.private_key,
-        ['https://www.googleapis.com/auth/gmail.send'],
-        serviceAccount.client_email // Use service account email as subject
-      );
+      if (!gmailConfig.email || !gmailConfig.appPassword) {
+        return { 
+          success: false, 
+          error: "Gmail credentials must include both email and appPassword fields."
+        };
+      }
 
-      const gmail = google.gmail({ version: 'v1', auth });
-
-      // Create email message with proper headers
-      const emailContent = [
-        `From: ${serviceAccount.client_email}`,
-        `To: ${to}`,
-        `Subject: ${subject}`,
-        `Content-Type: text/plain; charset="UTF-8"`,
-        '',
-        body
-      ].join('\n');
-
-      const encodedMessage = Buffer.from(emailContent)
-        .toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-
-      // Send the email
-      console.log('Attempting to send email with Gmail API...');
-      const response = await gmail.users.messages.send({
-        userId: 'me',
-        requestBody: {
-          raw: encodedMessage,
-        },
+      // Create SMTP transporter
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: gmailConfig.email,
+          pass: gmailConfig.appPassword
+        }
       });
 
-      console.log('Email sent successfully:', response.data);
+      // Send the email
+      console.log('Attempting to send email with Gmail SMTP...');
+      const result = await transporter.sendMail({
+        from: gmailConfig.email,
+        to: to,
+        subject: subject,
+        text: body
+      });
+
+      console.log('Email sent successfully:', result.messageId);
       
       return { 
         success: true, 
         result: {
-          id: response.data.id,
-          threadId: response.data.threadId,
-          labelIds: response.data.labelIds,
+          messageId: result.messageId,
+          from: gmailConfig.email,
           to,
           subject,
           body: body.substring(0, 100) + (body.length > 100 ? '...' : '')
@@ -76,10 +69,10 @@ export class GmailAgent {
       let errorMessage = "Failed to send email";
       
       if (error instanceof Error) {
-        if (error.message.includes("invalid_grant")) {
-          errorMessage = "Invalid Gmail credentials. Please check your service account setup.";
-        } else if (error.message.includes("insufficient_scope")) {
-          errorMessage = "Gmail API permissions insufficient. Ensure the service account has Gmail send permissions.";
+        if (error.message.includes("Invalid login")) {
+          errorMessage = "Invalid Gmail credentials. Please check your email and app password.";
+        } else if (error.message.includes("Authentication failed")) {
+          errorMessage = "Gmail authentication failed. Ensure 2FA is enabled and you're using an app password.";
         } else {
           errorMessage = error.message;
         }

@@ -43,29 +43,33 @@ async function testGitHubConnection(apiKey: string) {
 
 async function testGmailConnection(credentials: string) {
   try {
-    const { google } = await import("googleapis");
-    const serviceAccount = JSON.parse(credentials);
+    const nodemailer = await import("nodemailer");
+    const gmailConfig = JSON.parse(credentials);
     
-    // Create JWT auth client
-    const auth = new google.auth.JWT(
-      serviceAccount.client_email,
-      undefined,
-      serviceAccount.private_key,
-      ['https://www.googleapis.com/auth/gmail.send']
-    );
+    if (!gmailConfig.email || !gmailConfig.appPassword) {
+      return { success: false, error: "Missing email or appPassword fields" };
+    }
 
-    // Test the connection by getting the user's profile
-    const gmail = google.gmail({ version: 'v1', auth });
-    await gmail.users.getProfile({ userId: 'me' });
+    // Create SMTP transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: gmailConfig.email,
+        pass: gmailConfig.appPassword
+      }
+    });
+
+    // Verify SMTP connection
+    await transporter.verify();
     
     return { success: true };
   } catch (error) {
-    let errorMessage = "Failed to connect to Gmail";
+    let errorMessage = "Failed to connect to Gmail SMTP";
     if (error instanceof Error) {
-      if (error.message.includes("invalid_grant")) {
-        errorMessage = "Invalid Gmail credentials. Please check your service account setup.";
-      } else if (error.message.includes("insufficient_scope")) {
-        errorMessage = "Gmail API permissions insufficient. Ensure the service account has Gmail send permissions.";
+      if (error.message.includes("Invalid login")) {
+        errorMessage = "Invalid email or app password";
+      } else if (error.message.includes("Authentication failed")) {
+        errorMessage = "Authentication failed - ensure 2FA is enabled and using app password";
       } else {
         errorMessage = error.message;
       }
