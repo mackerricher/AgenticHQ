@@ -76,11 +76,11 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
       <nav className="flex-1 p-4 space-y-2">
         <Link href="/">
           <Button
-            variant={location === "/" ? "default" : "ghost"}
-            className={`w-full justify-start gap-3 ${
+            variant="ghost"
+            className={`w-full justify-start gap-3 transition-colors ${
               location === "/" 
                 ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
             }`}
           >
             <MessageCircle className="h-4 w-4" />
@@ -95,11 +95,11 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
           <Link href="/clients">
             <Button
-              variant={location === "/clients" ? "default" : "ghost"}
-              className={`w-full justify-start gap-3 ${
+              variant="ghost"
+              className={`w-full justify-start gap-3 transition-colors ${
                 location === "/clients" 
                   ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
               <Bot className="h-4 w-4" />
@@ -109,11 +109,11 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
           <Link href="/agents">
             <Button
-              variant={location === "/agents" ? "default" : "ghost"}
-              className={`w-full justify-start gap-3 ${
+              variant="ghost"
+              className={`w-full justify-start gap-3 transition-colors ${
                 location === "/agents" 
                   ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
               <Users className="h-4 w-4" />
@@ -123,11 +123,11 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
           <Link href="/subagents">
             <Button
-              variant={location === "/subagents" ? "default" : "ghost"}
-              className={`w-full justify-start gap-3 ${
+              variant="ghost"
+              className={`w-full justify-start gap-3 transition-colors ${
                 location === "/subagents" 
                   ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
               <Package className="h-4 w-4" />
@@ -137,11 +137,11 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
           <Link href="/tools">
             <Button
-              variant={location === "/tools" ? "default" : "ghost"}
-              className={`w-full justify-start gap-3 ${
+              variant="ghost"
+              className={`w-full justify-start gap-3 transition-colors ${
                 location === "/tools" 
                   ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
-                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
               <Wrench className="h-4 w-4" />
@@ -158,7 +158,7 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
           <Button
             variant="ghost"
             onClick={onSettingsClick}
-            className="w-full justify-between hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+            className="w-full justify-between hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
           >
             <div className="flex items-center gap-3">
               <Plug className="h-4 w-4 text-gray-600 dark:text-gray-400" />
