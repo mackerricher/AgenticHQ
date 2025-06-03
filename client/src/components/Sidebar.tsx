@@ -52,9 +52,13 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
       <div className="p-6 border-b border-pink-200 dark:border-violet-400/30">
         <div className="flex items-center justify-between">
           <Link href="/">
-            <h1 className="text-2xl font-heading gradient-text cursor-pointer hover:opacity-80 transition-opacity">
-              AgenticHQ
-            </h1>
+            <div className="cursor-pointer hover:opacity-80 transition-opacity">
+              <img 
+                src="/attached_assets/main_logo.png" 
+                alt="AgenticHQ" 
+                className="h-8 w-auto"
+              />
+            </div>
           </Link>
           <Button
             variant="ghost"
