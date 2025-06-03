@@ -15,7 +15,8 @@ import {
   Clock,
   AlertCircle,
   Loader2,
-  ArrowLeft
+  ArrowLeft,
+  Trash2
 } from "lucide-react";
 
 interface ChatMessage {
@@ -110,9 +111,34 @@ export default function Chat() {
     },
   });
 
+  // Clear conversation mutation
+  const clearConversationMutation = useMutation({
+    mutationFn: api.chat.clearHistory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/chat/history", clientId] });
+      toast({
+        title: "Success",
+        description: "Conversation cleared successfully",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to clear conversation",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSend = () => {
     if (!message.trim() || sendMessageMutation.isPending) return;
     sendMessageMutation.mutate(message);
+  };
+
+  const handleClearConversation = () => {
+    if (confirm("Are you sure you want to clear this conversation? This action cannot be undone.")) {
+      clearConversationMutation.mutate();
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -191,19 +217,31 @@ export default function Chat() {
       {/* Client Navigation Bar */}
       {client && (
         <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLocation("/clients")}
+                className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <div>
+                <span className="text-sm text-gray-500 dark:text-gray-400">Chatting with</span>
+                <h2 className="font-medium text-gray-900 dark:text-gray-100">{client.name}</h2>
+              </div>
+            </div>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setLocation("/clients")}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              onClick={handleClearConversation}
+              disabled={clearConversationMutation.isPending}
+              className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <Trash2 className="h-4 w-4 mr-2" />
+              Clear
             </Button>
-            <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">Chatting with</span>
-              <h2 className="font-medium text-gray-900 dark:text-gray-100">{client.name}</h2>
-            </div>
           </div>
         </div>
       )}
