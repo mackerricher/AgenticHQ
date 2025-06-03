@@ -406,8 +406,8 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                         <Input
                           id="gmail-credentials"
                           type={showKeys.gmail ? "text" : "password"}
-                          placeholder="Paste Gmail OAuth credentials JSON..."
-                          value={keys.gmail || ""}
+                          placeholder={gmailStatus?.hasKey ? "" : "Paste Gmail OAuth credentials JSON..."}
+                          value={getMaskedKey(gmailStatus, keys.gmail || "")}
                           onChange={(e) => setKeys(prev => ({ ...prev, gmail: e.target.value }))}
                           className="mb-3"
                         />
