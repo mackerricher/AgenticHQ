@@ -109,6 +109,13 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
     setShowKeys(prev => ({ ...prev, [provider]: !prev[provider] }));
   };
 
+  const getMaskedKey = (status: any, inputValue: string) => {
+    if (status?.hasKey && status?.keyPreview && !inputValue) {
+      return status.keyPreview + 'xxxxxxxxxxxxxx';
+    }
+    return inputValue;
+  };
+
   const getStatusIndicator = (status: any, isLoading: boolean) => {
     if (isLoading) {
       return <Loader2 className="h-4 w-4 animate-spin text-gray-400" />;
@@ -211,8 +218,8 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                         <Input
                           id="openai-key"
                           type={showKeys.openai ? "text" : "password"}
-                          placeholder="sk-..."
-                          value={keys.openai || ""}
+                          placeholder={openaiStatus?.hasKey ? "" : "sk-..."}
+                          value={getMaskedKey(openaiStatus, keys.openai || "")}
                           onChange={(e) => setKeys(prev => ({ ...prev, openai: e.target.value }))}
                           className="mb-3"
                         />
@@ -272,8 +279,8 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                         <Input
                           id="deepseek-key"
                           type={showKeys.deepseek ? "text" : "password"}
-                          placeholder="Enter DeepSeek API key..."
-                          value={keys.deepseek || ""}
+                          placeholder={deepseekStatus?.hasKey ? "" : "Enter DeepSeek API key..."}
+                          value={getMaskedKey(deepseekStatus, keys.deepseek || "")}
                           onChange={(e) => setKeys(prev => ({ ...prev, deepseek: e.target.value }))}
                           className="mb-3"
                         />
@@ -334,8 +341,8 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                         <Input
                           id="github-token"
                           type={showKeys.github ? "text" : "password"}
-                          placeholder="ghp_..."
-                          value={keys.github || ""}
+                          placeholder={githubStatus?.hasKey ? "" : "ghp_..."}
+                          value={getMaskedKey(githubStatus, keys.github || "")}
                           onChange={(e) => setKeys(prev => ({ ...prev, github: e.target.value }))}
                           className="mb-3"
                         />

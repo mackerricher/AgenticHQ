@@ -9,6 +9,7 @@ export interface ChatResponse {
 export interface KeyStatus {
   hasKey: boolean;
   updatedAt?: string;
+  keyPreview?: string;
 }
 
 export const api = {

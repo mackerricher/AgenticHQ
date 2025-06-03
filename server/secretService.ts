@@ -85,10 +85,10 @@ class SecretService {
     this.cache.delete(provider);
   }
 
-  async hasKey(provider: string): Promise<{ hasKey: boolean; updatedAt?: Date }> {
+  async hasKey(provider: string): Promise<{ hasKey: boolean; updatedAt?: Date; keyPreview?: string }> {
     const secret = await storage.getSecret(provider);
     if (secret) {
-      return { hasKey: true, updatedAt: secret.updatedAt };
+      return { hasKey: true, updatedAt: secret.updatedAt, keyPreview: secret.keyPreview };
     }
     
     // Check environment variables
