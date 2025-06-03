@@ -14,14 +14,33 @@ class SecretService {
 
   private encrypt(text: string): string {
     try {
+      console.log(`[DEBUG] Starting encryption for text length: ${text.length}`);
+      console.log(`[DEBUG] Master key length: ${this.masterKey.length}`);
+      
       const iv = crypto.randomBytes(16);
+      console.log(`[DEBUG] Generated IV: ${iv.toString('hex')}`);
+      
       const key = crypto.scryptSync(this.masterKey, 'salt', 32);
+      console.log(`[DEBUG] Derived key length: ${key.length}`);
+      
       const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+      console.log(`[DEBUG] Created cipher`);
+      
       const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
+      console.log(`[DEBUG] Encrypted text length: ${encrypted.length}`);
+      
       const authTag = cipher.getAuthTag();
-      return iv.toString('hex') + ':' + authTag.toString('hex') + ':' + encrypted.toString('hex');
+      console.log(`[DEBUG] Generated auth tag length: ${authTag.length}`);
+      
+      const result = iv.toString('hex') + ':' + authTag.toString('hex') + ':' + encrypted.toString('hex');
+      console.log(`[DEBUG] Final encrypted string length: ${result.length}`);
+      
+      return result;
     } catch (error) {
-      console.error('Encryption error:', error);
+      console.error('[ERROR] Encryption error:', error);
+      console.error('[ERROR] Error name:', error instanceof Error ? error.name : 'Unknown');
+      console.error('[ERROR] Error message:', error instanceof Error ? error.message : 'Unknown');
+      console.error('[ERROR] Error stack:', error instanceof Error ? error.stack : 'No stack');
       throw new Error(`Encryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

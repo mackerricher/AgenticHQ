@@ -247,17 +247,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { provider } = req.params;
       const { key } = req.body;
       
+      console.log(`[DEBUG] Saving key for provider: ${provider}`);
+      console.log(`[DEBUG] Key length: ${key ? key.length : 'undefined'}`);
+      console.log(`[DEBUG] MASTER_SECRET set: ${!!process.env.MASTER_SECRET}`);
+      
       if (!key || typeof key !== 'string') {
+        console.log(`[ERROR] Invalid key provided for ${provider}`);
         return res.status(400).json({ error: "API key is required" });
       }
 
       await secretService.setKey(provider, key);
       const keyInfo = await secretService.hasKey(provider);
       
+      console.log(`[SUCCESS] Key saved for ${provider}:`, keyInfo);
       res.json({ success: true, ...keyInfo });
     } catch (error) {
-      console.error("Error saving key:", error);
-      res.status(500).json({ error: "Failed to save API key" });
+      console.error(`[ERROR] Failed to save key for ${req.params.provider}:`, error);
+      console.error(`[ERROR] Error stack:`, error instanceof Error ? error.stack : 'No stack trace');
+      res.status(500).json({ 
+        error: "Failed to save API key",
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
