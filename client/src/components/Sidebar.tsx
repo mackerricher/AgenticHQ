@@ -4,6 +4,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/ThemeProvider";
 import { api } from "@/lib/api";
+import logoSrc from "@assets/main_logo.png";
 import { 
   MessageCircle, 
   Settings, 
@@ -54,7 +55,7 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
           <Link href="/">
             <div className="cursor-pointer hover:opacity-80 transition-opacity">
               <img 
-                src="/attached_assets/main_logo.png" 
+                src={logoSrc} 
                 alt="AgenticHQ" 
                 className="h-8 w-auto"
               />

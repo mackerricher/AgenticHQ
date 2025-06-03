@@ -312,10 +312,7 @@ export default function Chat() {
               )}
             </Button>
           </div>
-          <div className="flex items-center justify-between mt-3">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              💡 Try: "Create a repo and email me", "Write documentation"
-            </div>
+          <div className="flex justify-end mt-3">
             <div className="text-xs text-gray-500 dark:text-gray-400">
               <kbd className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs">Shift + Enter</kbd> for new line
             </div>
