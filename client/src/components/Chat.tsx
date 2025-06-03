@@ -28,6 +28,7 @@ function PlanStepsDisplay({ planId, activePlanId }: PlanStepsDisplayProps) {
   const { data: plan } = useQuery({
     queryKey: [`/api/plans/${planId}`],
     enabled: !!planId,
+    refetchInterval: planId === activePlanId ? 2000 : false, // Refresh every 2 seconds for active plans
   });
 
   if (!plan || !plan.steps) {
