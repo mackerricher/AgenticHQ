@@ -13,11 +13,17 @@ class SecretService {
   }
 
   private encrypt(text: string): string {
-    const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipher('aes-256-gcm', this.masterKey);
-    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
-    const authTag = cipher.getAuthTag();
-    return iv.toString('hex') + ':' + authTag.toString('hex') + ':' + encrypted.toString('hex');
+    try {
+      const iv = crypto.randomBytes(16);
+      const key = crypto.scryptSync(this.masterKey, 'salt', 32);
+      const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+      const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
+      const authTag = cipher.getAuthTag();
+      return iv.toString('hex') + ':' + authTag.toString('hex') + ':' + encrypted.toString('hex');
+    } catch (error) {
+      console.error('Encryption error:', error);
+      throw new Error(`Encryption failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   private decrypt(encryptedData: string): string {
@@ -30,7 +36,8 @@ class SecretService {
     const authTag = Buffer.from(parts[1], 'hex');
     const encrypted = Buffer.from(parts[2], 'hex');
     
-    const decipher = crypto.createDecipher('aes-256-gcm', this.masterKey);
+    const key = crypto.scryptSync(this.masterKey, 'salt', 32);
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
     decipher.setAuthTag(authTag);
     
     const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
@@ -66,18 +73,23 @@ class SecretService {
   }
 
   async setKey(provider: string, rawKey: string): Promise<void> {
-    const encryptedKey = this.encrypt(rawKey);
-    const keyPreview = rawKey.substring(0, 6);
-    
-    const existing = await storage.getSecret(provider);
-    if (existing) {
-      await storage.updateSecret(provider, encryptedKey, keyPreview);
-    } else {
-      await storage.createSecret({ provider, encryptedKey, keyPreview });
+    try {
+      const encryptedKey = this.encrypt(rawKey);
+      const keyPreview = rawKey.substring(0, 6);
+      
+      const existing = await storage.getSecret(provider);
+      if (existing) {
+        await storage.updateSecret(provider, encryptedKey, keyPreview);
+      } else {
+        await storage.createSecret({ provider, encryptedKey, keyPreview });
+      }
+      
+      // Update cache
+      this.cache.set(provider, rawKey);
+    } catch (error) {
+      console.error(`Failed to set key for provider ${provider}:`, error);
+      throw new Error(`Failed to encrypt and store API key: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-    
-    // Update cache
-    this.cache.set(provider, rawKey);
   }
 
   async deleteKey(provider: string): Promise<void> {
