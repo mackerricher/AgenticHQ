@@ -33,11 +33,13 @@ For tool-based requests, create steps with:
 - tool: the tool name (e.g., "GitHub.createRepo", "FileCreator.createMarkdown")
 - args: object with the arguments for the tool
 
+IMPORTANT: When creating documentation files (README, installation guides, tutorials), provide comprehensive, detailed, and practical content that fully addresses the user's request. Include step-by-step instructions, commands, code examples, and explanations.
+
 Example plan format:
 {
   "steps": [
     { "tool": "GitHub.createRepo", "args": { "name": "MyProject", "description": "A new project" } },
-    { "tool": "FileCreator.createMarkdown", "args": { "text": "# MyProject\\nThis is my project." } },
+    { "tool": "FileCreator.createMarkdown", "args": { "filename": "README.md", "contents": "# MyProject\\n\\nA comprehensive project description...\\n\\n## Installation\\n\\n1. First, install Node.js:\\n   \`\`\`bash\\n   brew install node\\n   \`\`\`\\n\\n2. Clone this repository:\\n   \`\`\`bash\\n   git clone https://github.com/user/MyProject.git\\n   \`\`\`\\n\\n3. Install dependencies:\\n   \`\`\`bash\\n   npm install\\n   \`\`\`" } },
     { "tool": "GitHub.addFile", "args": { "repo": "MyProject", "path": "README.md", "contentRef": 1 } }
   ]
 }
