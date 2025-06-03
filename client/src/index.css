@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
 :root {
   --background: 0 0% 100%;
