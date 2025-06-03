@@ -43,7 +43,7 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
   const getStatusIndicator = (hasKey: boolean) => {
     return (
-      <div className={`w-2 h-2 rounded-full ${hasKey ? 'bg-green-400' : 'bg-gray-400'}`} />
+      <div className={`w-2 h-2 rounded-full ${hasKey ? 'bg-gray-700 dark:bg-gray-300' : 'bg-gray-400 dark:bg-gray-600'}`} />
     );
   };
 
@@ -98,8 +98,8 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
               variant={location === "/clients" ? "default" : "ghost"}
               className={`w-full justify-start gap-3 ${
                 location === "/clients" 
-                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
-                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               <Bot className="h-4 w-4" />
@@ -112,8 +112,8 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
               variant={location === "/agents" ? "default" : "ghost"}
               className={`w-full justify-start gap-3 ${
                 location === "/agents" 
-                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
-                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               <Users className="h-4 w-4" />
@@ -126,8 +126,8 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
               variant={location === "/subagents" ? "default" : "ghost"}
               className={`w-full justify-start gap-3 ${
                 location === "/subagents" 
-                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
-                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               <Package className="h-4 w-4" />
@@ -140,8 +140,8 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
               variant={location === "/tools" ? "default" : "ghost"}
               className={`w-full justify-start gap-3 ${
                 location === "/tools" 
-                  ? "bg-gradient-to-r from-pink-400 to-violet-400 text-white shadow-lg" 
-                  : "hover:bg-white/50 dark:hover:bg-violet-400/20"
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
               <Wrench className="h-4 w-4" />
@@ -158,10 +158,10 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
           <Button
             variant="ghost"
             onClick={onSettingsClick}
-            className="w-full justify-between hover:bg-white/50 dark:hover:bg-violet-400/20 text-gray-700 dark:text-gray-300"
+            className="w-full justify-between hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
           >
             <div className="flex items-center gap-3">
-              <Plug className="h-4 w-4 text-green-500" />
+              <Plug className="h-4 w-4 text-gray-600 dark:text-gray-400" />
               <span>Connections</span>
             </div>
             <div className="flex items-center gap-1">
