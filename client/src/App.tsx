@@ -17,6 +17,7 @@ function Router() {
   return (
     <Layout>
       <Switch>
+        <Route path="/" component={Clients} />
         <Route path="/clients" component={Clients} />
         <Route path="/agents" component={Agents} />
         <Route path="/subagents" component={SubAgents} />
