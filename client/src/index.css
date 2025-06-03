@@ -26,10 +26,10 @@
   --ring: 330 81% 60%;
   --radius: 0.75rem;
   
-  /* Gen Alpha colors */
-  --gen-pink: 330 81% 60%; /* #F472B6 */
-  --gen-violet: 262 83% 58%; /* #A78BFA */
-  --gen-blue: 213 94% 68%; /* #60A5FA */
+  /* Gen Alpha colors - toned down */
+  --gen-pink: 330 65% 55%; /* Softer pink */
+  --gen-violet: 262 70% 55%; /* Softer violet */
+  --gen-blue: 213 80% 60%; /* Softer blue */
 }
 
 .dark {
@@ -60,8 +60,10 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-pink-300 via-blue-200 to-violet-200 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 min-h-screen font-serif antialiased transition-colors duration-500;
+    @apply bg-gradient-to-br from-pink-200 via-blue-100 to-violet-100 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 min-h-screen font-serif antialiased transition-colors duration-500;
     font-family: 'Crimson Text', serif;
+    font-size: 16px;
+    line-height: 1.6;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -82,7 +84,23 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-size: 1.125rem;
+    font-weight: 600;
   }
+
+  /* Improved typography scale */
+  .text-xs { font-size: 0.8rem !important; }
+  .text-sm { font-size: 0.9rem !important; }
+  .text-base { font-size: 1rem !important; }
+  .text-lg { font-size: 1.125rem !important; }
+  .text-xl { font-size: 1.25rem !important; }
+  .text-2xl { font-size: 1.5rem !important; }
+  .text-3xl { font-size: 1.875rem !important; }
+
+  /* Better spacing for components */
+  .card-content { @apply space-y-4 text-base leading-relaxed; }
+  .button-text { @apply text-base font-medium; }
+  .nav-text { @apply text-lg; }
   
   .glassmorphism {
     background: rgba(255, 255, 255, 0.1);
