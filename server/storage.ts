@@ -1,11 +1,12 @@
 import { 
-  users, secrets, chatMessages, plans, planExecutions, clients,
+  users, secrets, chatMessages, plans, planExecutions, clients, agents,
   type User, type InsertUser,
   type Secret, type InsertSecret,
   type ChatMessage, type InsertChatMessage,
   type Plan, type InsertPlan,
   type PlanExecution, type InsertPlanExecution,
-  type Client, type InsertClient
+  type Client, type InsertClient,
+  type Agent, type InsertAgent
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
@@ -43,6 +44,13 @@ export interface IStorage {
   createClient(client: InsertClient): Promise<Client>;
   updateClient(id: number, updates: Partial<Client>): Promise<Client | undefined>;
   deleteClient(id: number): Promise<boolean>;
+
+  // Agents
+  getAgents(): Promise<Agent[]>;
+  getAgent(id: number): Promise<Agent | undefined>;
+  createAgent(agent: InsertAgent): Promise<Agent>;
+  updateAgent(id: number, updates: Partial<Agent>): Promise<Agent | undefined>;
+  deleteAgent(id: number): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -190,6 +198,37 @@ export class DatabaseStorage implements IStorage {
 
   async deleteClient(id: number): Promise<boolean> {
     const result = await db.delete(clients).where(eq(clients.id, id));
+    return Boolean(result.rowCount);
+  }
+
+  async getAgents(): Promise<Agent[]> {
+    return await db.select().from(agents).orderBy(agents.createdAt);
+  }
+
+  async getAgent(id: number): Promise<Agent | undefined> {
+    const [agent] = await db.select().from(agents).where(eq(agents.id, id));
+    return agent || undefined;
+  }
+
+  async createAgent(insertAgent: InsertAgent): Promise<Agent> {
+    const [agent] = await db
+      .insert(agents)
+      .values(insertAgent)
+      .returning();
+    return agent;
+  }
+
+  async updateAgent(id: number, updates: Partial<Agent>): Promise<Agent | undefined> {
+    const [agent] = await db
+      .update(agents)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(agents.id, id))
+      .returning();
+    return agent || undefined;
+  }
+
+  async deleteAgent(id: number): Promise<boolean> {
+    const result = await db.delete(agents).where(eq(agents.id, id));
     return Boolean(result.rowCount);
   }
 }

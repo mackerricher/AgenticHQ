@@ -348,6 +348,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Agent management routes
+  app.get("/api/agents", async (_req, res) => {
+    try {
+      const agents = await storage.getAgents();
+      res.json(agents);
+    } catch (error) {
+      console.error("Error fetching agents:", error);
+      res.status(500).json({ error: "Failed to fetch agents" });
+    }
+  });
+
+  app.post("/api/agents", async (req, res) => {
+    try {
+      const { insertAgentSchema } = await import("@shared/schema");
+      const validatedData = insertAgentSchema.parse(req.body);
+      const agent = await storage.createAgent(validatedData);
+      res.json(agent);
+    } catch (error) {
+      console.error("Error creating agent:", error);
+      res.status(500).json({ error: "Failed to create agent" });
+    }
+  });
+
+  app.get("/api/agents/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const agent = await storage.getAgent(id);
+      if (!agent) {
+        res.status(404).json({ error: "Agent not found" });
+        return;
+      }
+      res.json(agent);
+    } catch (error) {
+      console.error("Error fetching agent:", error);
+      res.status(500).json({ error: "Failed to fetch agent" });
+    }
+  });
+
+  app.put("/api/agents/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const agent = await storage.updateAgent(id, req.body);
+      if (!agent) {
+        res.status(404).json({ error: "Agent not found" });
+        return;
+      }
+      res.json(agent);
+    } catch (error) {
+      console.error("Error updating agent:", error);
+      res.status(500).json({ error: "Failed to update agent" });
+    }
+  });
+
+  app.delete("/api/agents/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteAgent(id);
+      if (!success) {
+        res.status(404).json({ error: "Agent not found" });
+        return;
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting agent:", error);
+      res.status(500).json({ error: "Failed to delete agent" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
