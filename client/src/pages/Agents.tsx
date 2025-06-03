@@ -19,14 +19,28 @@ import { useToast } from "@/hooks/use-toast";
 const createAgentFormSchema = insertAgentSchema.extend({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
-  type: z.string().min(1, "Type is required"),
 });
 
 type CreateAgentForm = z.infer<typeof createAgentFormSchema>;
 
 export default function Agents() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedTools, setSelectedTools] = useState<string[]>([]);
+  const [selectedSubAgents, setSelectedSubAgents] = useState<string[]>([]);
   const { toast } = useToast();
+
+  // Available tools and sub-agents
+  const availableTools = [
+    { id: "createMarkdown", name: "createMarkdown", description: "Create markdown files" },
+    { id: "createRepo", name: "createRepo", description: "Create GitHub repositories" },
+    { id: "addFile", name: "addFile", description: "Add files to repositories" },
+    { id: "sendEmail", name: "sendEmail", description: "Send emails via Gmail" },
+  ];
+
+  const availableSubAgents = [
+    { id: "file-processor", name: "File Processor", description: "Process file operations" },
+    { id: "data-analyzer", name: "Data Analyzer", description: "Analyze data patterns" },
+  ];
 
   const { data: agents = [], isLoading } = useQuery<Agent[]>({
     queryKey: ["/api/agents"],
@@ -46,6 +60,8 @@ export default function Agents() {
       queryClient.invalidateQueries({ queryKey: ["/api/agents"] });
       setIsCreateModalOpen(false);
       form.reset();
+      setSelectedTools([]);
+      setSelectedSubAgents([]);
       toast({
         title: "Success",
         description: "Agent created successfully",
@@ -91,12 +107,34 @@ export default function Agents() {
       description: "",
       tools: [],
       subAgents: [],
-      type: "",
+      type: "custom",
     },
   });
 
   const onSubmit = (data: CreateAgentForm) => {
-    createAgentMutation.mutate(data);
+    const agentData = {
+      ...data,
+      tools: selectedTools,
+      subAgents: selectedSubAgents,
+      type: "custom",
+    };
+    createAgentMutation.mutate(agentData);
+  };
+
+  const toggleTool = (toolId: string) => {
+    setSelectedTools(prev =>
+      prev.includes(toolId)
+        ? prev.filter(id => id !== toolId)
+        : [...prev, toolId]
+    );
+  };
+
+  const toggleSubAgent = (subAgentId: string) => {
+    setSelectedSubAgents(prev =>
+      prev.includes(subAgentId)
+        ? prev.filter(id => id !== subAgentId)
+        : [...prev, subAgentId]
+    );
   };
 
   const handleDeleteAgent = (id: number) => {
@@ -174,28 +212,66 @@ export default function Agents() {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Agent Type</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select agent type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="github">GitHub Agent</SelectItem>
-                            <SelectItem value="gmail">Gmail Agent</SelectItem>
-                            <SelectItem value="custom">Custom Agent</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  
+                  {/* Tools Selection */}
+                  <div>
+                    <FormLabel>Tools</FormLabel>
+                    <div className="mt-2 space-y-2 max-h-40 overflow-y-auto">
+                      {availableTools.map((tool) => (
+                        <div
+                          key={tool.id}
+                          className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                            selectedTools.includes(tool.id)
+                              ? 'border-gray-900 dark:border-gray-300 bg-gray-50 dark:bg-gray-800'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                          }`}
+                          onClick={() => toggleTool(tool.id)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-gray-100">{tool.name}</div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">{tool.description}</div>
+                            </div>
+                            {selectedTools.includes(tool.id) && (
+                              <div className="w-4 h-4 bg-gray-900 dark:bg-gray-100 rounded-full flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full"></div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Sub-Agents Selection */}
+                  <div>
+                    <FormLabel>Sub-Agents</FormLabel>
+                    <div className="mt-2 space-y-2 max-h-40 overflow-y-auto">
+                      {availableSubAgents.map((subAgent) => (
+                        <div
+                          key={subAgent.id}
+                          className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                            selectedSubAgents.includes(subAgent.id)
+                              ? 'border-gray-900 dark:border-gray-300 bg-gray-50 dark:bg-gray-800'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                          }`}
+                          onClick={() => toggleSubAgent(subAgent.id)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="font-medium text-gray-900 dark:text-gray-100">{subAgent.name}</div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">{subAgent.description}</div>
+                            </div>
+                            {selectedSubAgents.includes(subAgent.id) && (
+                              <div className="w-4 h-4 bg-gray-900 dark:bg-gray-100 rounded-full flex items-center justify-center">
+                                <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full"></div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                   <DialogFooter>
                     <Button
                       type="button"
