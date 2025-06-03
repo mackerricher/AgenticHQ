@@ -406,27 +406,27 @@ export default function Clients() {
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {client.description}
                   </p>
-                  <div className="mb-4">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Agents:</span>
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      {Array.isArray(client.agents) && client.agents.length > 0 ? (
-                        client.agents.map((agentId, index) => {
-                          const agent = availableAgents?.find(a => a.id === parseInt(agentId));
-                          return (
-                            <Badge key={index} variant="secondary" className="text-xs">
-                              {agent?.name || `Agent ${agentId}`}
-                            </Badge>
-                          );
-                        })
-                      ) : (
-                        <span className="text-xs text-gray-500 dark:text-gray-400">No agents assigned</span>
-                      )}
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Agents:</span>
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {Array.isArray(client.agents) && client.agents.length > 0 ? (
+                          client.agents.map((agentId, index) => {
+                            const agent = availableAgents?.find(a => a.id === parseInt(agentId));
+                            return (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {agent?.name || `Agent ${agentId}`}
+                              </Badge>
+                            );
+                          })
+                        ) : (
+                          <span className="text-xs text-gray-500 dark:text-gray-400">No agents assigned</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex justify-end">
                     <Button
                       onClick={() => handleChatWithClient(client)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="bg-blue-500 hover:bg-blue-600 text-white"
                     >
                       <MessageCircle className="h-4 w-4 mr-2" />
                       Chat
