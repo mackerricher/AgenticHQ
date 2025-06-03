@@ -24,7 +24,7 @@ export default function SubAgents() {
     tools: [] as string[]
   });
 
-  const availableTools = ["createMarkdown"];
+  const availableTools = ["createMarkdown", "createRepo", "addFile", "sendEmail"];
 
   const handleCreateSubAgent = () => {
     if (!newSubAgent.name.trim()) return;
