@@ -324,11 +324,11 @@ export default function Chat() {
                       </div>
                       
                       {/* Show plan steps if this message has a plan */}
-                      {msg.planId && planSteps.length > 0 && (
+                      {msg.planId && (msg.planId === activePlanId ? planSteps.length > 0 : msg.steps && msg.steps.length > 0) && (
                         <div className="mt-4 space-y-3">
                           <h4 className="font-medium text-gray-900 dark:text-gray-100">Execution Steps:</h4>
-                          {planSteps.map((step, index) => {
-                            const status = stepStatuses[index] || "pending";
+                          {(msg.planId === activePlanId ? planSteps : msg.steps || []).map((step, index) => {
+                            const status = msg.planId === activePlanId ? (stepStatuses[index] || "pending") : "failed";
                             return (
                               <div
                                 key={index}
