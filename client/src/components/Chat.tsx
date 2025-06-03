@@ -60,7 +60,7 @@ export default function Chat() {
 
   // Send message mutation
   const sendMessageMutation = useMutation({
-    mutationFn: api.chat.send,
+    mutationFn: (message: string) => api.chat.send(message, clientId || undefined),
     onSuccess: (data) => {
       if (data.planId && data.steps) {
         setActivePlanId(data.planId);
@@ -98,7 +98,7 @@ export default function Chat() {
         }, 30000);
       }
       
-      queryClient.invalidateQueries({ queryKey: ["/api/chat/history"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/chat/history", clientId] });
       setMessage("");
     },
     onError: (error) => {
