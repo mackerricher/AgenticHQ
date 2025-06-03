@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Github, Mail, Wrench, Users, Trash2, Loader2 } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
-import { insertAgentSchema, type Agent } from "@shared/schema";
+import { insertAgentSchema, type Agent, type SubAgent } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 const createAgentFormSchema = insertAgentSchema.extend({
@@ -38,7 +38,7 @@ export default function Agents() {
   ];
 
   // Fetch actual sub-agents from the database
-  const { data: availableSubAgents = [] } = useQuery({
+  const { data: availableSubAgents = [] } = useQuery<SubAgent[]>({
     queryKey: ["/api/subagents"],
   });
 
@@ -129,11 +129,11 @@ export default function Agents() {
     );
   };
 
-  const toggleSubAgent = (subAgentId: string) => {
+  const toggleSubAgent = (subAgentId: number) => {
     setSelectedSubAgents(prev =>
-      prev.includes(subAgentId)
-        ? prev.filter(id => id !== subAgentId)
-        : [...prev, subAgentId]
+      prev.includes(subAgentId.toString())
+        ? prev.filter(id => id !== subAgentId.toString())
+        : [...prev, subAgentId.toString()]
     );
   };
 
@@ -251,7 +251,7 @@ export default function Agents() {
                         <div
                           key={subAgent.id}
                           className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-                            selectedSubAgents.includes(subAgent.id)
+                            selectedSubAgents.includes(subAgent.id.toString())
                               ? 'border-gray-900 dark:border-gray-300 bg-gray-50 dark:bg-gray-800'
                               : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                           }`}
@@ -262,7 +262,7 @@ export default function Agents() {
                               <div className="font-medium text-gray-900 dark:text-gray-100">{subAgent.name}</div>
                               <div className="text-sm text-gray-500 dark:text-gray-400">{subAgent.description}</div>
                             </div>
-                            {selectedSubAgents.includes(subAgent.id) && (
+                            {selectedSubAgents.includes(subAgent.id.toString()) && (
                               <div className="w-4 h-4 bg-gray-900 dark:bg-gray-100 rounded-full flex items-center justify-center">
                                 <div className="w-2 h-2 bg-white dark:bg-gray-900 rounded-full"></div>
                               </div>

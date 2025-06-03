@@ -239,6 +239,37 @@ export class DatabaseStorage implements IStorage {
     const result = await db.delete(agents).where(eq(agents.id, id));
     return Boolean(result.rowCount);
   }
+
+  async getSubAgents(): Promise<SubAgent[]> {
+    return await db.select().from(subAgents).orderBy(subAgents.createdAt);
+  }
+
+  async getSubAgent(id: number): Promise<SubAgent | undefined> {
+    const [subAgent] = await db.select().from(subAgents).where(eq(subAgents.id, id));
+    return subAgent || undefined;
+  }
+
+  async createSubAgent(insertSubAgent: InsertSubAgent): Promise<SubAgent> {
+    const [subAgent] = await db
+      .insert(subAgents)
+      .values(insertSubAgent)
+      .returning();
+    return subAgent;
+  }
+
+  async updateSubAgent(id: number, updates: Partial<SubAgent>): Promise<SubAgent | undefined> {
+    const [subAgent] = await db
+      .update(subAgents)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(subAgents.id, id))
+      .returning();
+    return subAgent || undefined;
+  }
+
+  async deleteSubAgent(id: number): Promise<boolean> {
+    const result = await db.delete(subAgents).where(eq(subAgents.id, id));
+    return Boolean(result.rowCount);
+  }
 }
 
 export const storage = new DatabaseStorage();

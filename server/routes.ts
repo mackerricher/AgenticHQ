@@ -416,6 +416,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // SubAgent routes
+  app.get("/api/subagents", async (_req, res) => {
+    try {
+      const subAgents = await storage.getSubAgents();
+      res.json(subAgents);
+    } catch (error) {
+      console.error("Error fetching subagents:", error);
+      res.status(500).json({ error: "Failed to fetch subagents" });
+    }
+  });
+
+  app.post("/api/subagents", async (req, res) => {
+    try {
+      const subAgent = await storage.createSubAgent(req.body);
+      res.json(subAgent);
+    } catch (error) {
+      console.error("Error creating subagent:", error);
+      res.status(500).json({ error: "Failed to create subagent" });
+    }
+  });
+
+  app.delete("/api/subagents/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteSubAgent(id);
+      if (!success) {
+        res.status(404).json({ error: "SubAgent not found" });
+        return;
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting subagent:", error);
+      res.status(500).json({ error: "Failed to delete subagent" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
