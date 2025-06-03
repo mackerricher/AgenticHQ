@@ -376,7 +376,7 @@ export default function Chat() {
     <div className="flex-1 flex flex-col h-full">
       {/* Client Navigation Bar */}
       {client && (
-        <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3">
+        <div className="fixed top-0 left-80 right-0 z-20 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Button
@@ -407,7 +407,7 @@ export default function Chat() {
       )}
       
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4" style={{paddingBottom: '400px'}}>
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 pt-20" style={{paddingBottom: '400px'}}>
         {messages.length === 0 && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
