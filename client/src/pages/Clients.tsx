@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Bot, Users, Github, Mail, MessageCircle, Settings } from "lucide-react";
+import Sidebar from "@/components/Sidebar";
+import SettingsModal from "@/components/SettingsModal";
 
 interface Client {
   id: string;

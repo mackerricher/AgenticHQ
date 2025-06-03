@@ -50,10 +50,14 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
   return (
     <aside className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-pink-200 dark:border-violet-400/30 flex flex-col h-full">
-      {/* Header */}
+      {/* Header with Home link and Theme Toggle */}
       <div className="p-6 border-b border-pink-200 dark:border-violet-400/30">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-heading gradient-text">AgenticHQ</h1>
+          <Link href="/">
+            <h1 className="text-2xl font-heading gradient-text cursor-pointer hover:opacity-80 transition-opacity">
+              AgenticHQ
+            </h1>
+          </Link>
           <Button
             variant="ghost"
             size="sm"
@@ -63,9 +67,6 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </Button>
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-          AI-powered workflow automation
-        </p>
       </div>
 
       {/* Navigation */}
