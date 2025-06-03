@@ -427,7 +427,7 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <Mail className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                      <span className="font-semibold">Gmail OAuth Credentials</span>
+                      <span className="font-semibold">Gmail SMTP</span>
                       <div className="flex items-center gap-2">
                         {getStatusIndicator(gmailStatus, gmailLoading)}
                         <span className={`text-xs ${getStatusColor(gmailStatus, gmailLoading)}`}>
@@ -459,12 +459,12 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                   
                   <div className="space-y-3">
                     <div>
-                      <Label htmlFor="gmail-credentials">OAuth JSON Credentials</Label>
+                      <Label htmlFor="gmail-credentials">Gmail SMTP Configuration</Label>
                       <div className="relative">
                         <Input
                           id="gmail-credentials"
                           type={showKeys.gmail ? "text" : "password"}
-                          placeholder={gmailStatus?.hasKey ? "" : "Paste Gmail OAuth credentials JSON..."}
+                          placeholder={gmailStatus?.hasKey ? "" : '{"email": "your@gmail.com", "appPassword": "xxxx xxxx xxxx xxxx"}'}
                           value={getMaskedKey(gmailStatus, keys.gmail || "")}
                           onChange={(e) => setKeys(prev => ({ ...prev, gmail: e.target.value }))}
                           className="mb-3"
@@ -490,9 +490,15 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                         </div>
                       </div>
                     </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
-                      Get OAuth credentials from Google Cloud Console. Required scopes: <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">gmail.send</code>
-                    </p>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 space-y-2">
+                      <p><strong>Setup Instructions:</strong></p>
+                      <ol className="list-decimal list-inside space-y-1 ml-2">
+                        <li>Enable 2-Factor Authentication on your Gmail account</li>
+                        <li>Go to Google Account Settings → Security → 2-Step Verification</li>
+                        <li>Generate an App Password for "Mail"</li>
+                        <li>Use the JSON format above with your email and 16-character app password</li>
+                      </ol>
+                    </div>
                   </div>
                 </div>
               </TabsContent>
