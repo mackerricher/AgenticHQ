@@ -80,6 +80,22 @@ export class GitHubAgent {
       // Convert content to base64
       const contentBase64 = Buffer.from(content, 'utf8').toString('base64');
 
+      // Check if file already exists to get its SHA
+      let sha: string | undefined;
+      try {
+        const { data: existingFile } = await octokit.rest.repos.getContent({
+          owner,
+          repo,
+          path,
+        });
+        
+        if ('sha' in existingFile) {
+          sha = existingFile.sha;
+        }
+      } catch (error) {
+        // File doesn't exist, which is fine
+      }
+
       // Create or update the file
       const response = await octokit.rest.repos.createOrUpdateFileContents({
         owner,
@@ -87,6 +103,7 @@ export class GitHubAgent {
         path,
         message: `Add ${path}`,
         content: contentBase64,
+        ...(sha && { sha }), // Include SHA if file exists
       });
 
       return { 
