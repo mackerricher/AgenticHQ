@@ -289,14 +289,24 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                       </div>
                     </div>
                     {deepseekStatus?.hasKey && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteKey("deepseek")}
-                        disabled={deleteKeyMutation.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => testConnectionMutation.mutate("deepseek")}
+                          disabled={testConnectionMutation.isPending}
+                        >
+                          Test
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteKey("deepseek")}
+                          disabled={deleteKeyMutation.isPending}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
                   
@@ -351,14 +361,24 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                       </div>
                     </div>
                     {githubStatus?.hasKey && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteKey("github")}
-                        disabled={deleteKeyMutation.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => testConnectionMutation.mutate("github")}
+                          disabled={testConnectionMutation.isPending}
+                        >
+                          Test
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteKey("github")}
+                          disabled={deleteKeyMutation.isPending}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
                   
@@ -416,14 +436,24 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                       </div>
                     </div>
                     {gmailStatus?.hasKey && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteKey("gmail")}
-                        disabled={deleteKeyMutation.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => testConnectionMutation.mutate("gmail")}
+                          disabled={testConnectionMutation.isPending}
+                        >
+                          Test
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteKey("gmail")}
+                          disabled={deleteKeyMutation.isPending}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
                   
