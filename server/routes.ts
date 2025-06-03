@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { secretService } from "./secretService";
-import { openaiService } from "./llm/openai";
+import { deepseekService } from "./llm/deepseek";
 import { planRunner } from "./planRunner";
 import { insertChatMessageSchema, insertPlanSchema } from "@shared/schema";
 import { z } from "zod";
@@ -68,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate plan
       const availableTools = planRunner.getAllAvailableTools();
-      const planSteps = await openaiService.generatePlan(userMessage, availableTools);
+      const planSteps = await deepseekService.generatePlan(userMessage, availableTools);
       
       if (planSteps.length === 0) {
         const assistantMessage = "I understand your request, but I'm not sure how to create a plan for that. Could you try rephrasing or asking for something specific like creating a repository or sending an email?";
@@ -328,8 +328,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content: message.trim(),
       });
 
-      // Generate plan using OpenAI with client-specific tools
-      const plan = await openaiService.generatePlan(message.trim(), availableTools);
+      // Generate plan using DeepSeek with client-specific tools
+      const plan = await deepseekService.generatePlan(message.trim(), availableTools);
 
       // Create plan record
       const planRecord = await storage.createPlan({
@@ -342,7 +342,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       planRunner.executePlan(planRecord.id, plan);
 
       // Generate and store assistant response
-      const assistantResponse = await openaiService.generateResponse(message.trim(), { planId: planRecord.id, steps: plan });
+      const assistantResponse = await deepseekService.generateResponse(message.trim(), { planId: planRecord.id, steps: plan });
       
       const assistantMessage = await storage.createChatMessage({
         role: "assistant",
