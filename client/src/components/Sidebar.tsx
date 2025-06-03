@@ -13,8 +13,6 @@ import {
   Bot,
   Sun, 
   Moon,
-  Leaf,
-  ExternalLink,
   Plug
 } from "lucide-react";
 
@@ -170,19 +168,7 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
         </div>
       </nav>
 
-      {/* Eco Footer */}
-      <div className="p-4 border-t border-pink-200 dark:border-violet-400/30">
-        <Link href="/eco-pledge">
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-2 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
-          >
-            <Leaf className="h-4 w-4" />
-            <span>Eco Pledge</span>
-            <ExternalLink className="h-3 w-3 ml-auto" />
-          </Button>
-        </Link>
-      </div>
+
     </aside>
   );
 }
