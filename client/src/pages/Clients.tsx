@@ -1,57 +1,106 @@
 import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Users, Bot, Settings, Check } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Plus, Users, Bot, Settings, Check, Trash2 } from "lucide-react";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { insertClientSchema, type Client } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 
-interface Client {
-  id: string;
-  name: string;
-  description: string;
-  agents: string[];
-}
+const createClientFormSchema = insertClientSchema.extend({
+  name: z.string().min(1, "Name is required"),
+  description: z.string().min(1, "Description is required"),
+});
+
+type CreateClientForm = z.infer<typeof createClientFormSchema>;
 
 export default function Clients() {
-  const [clients, setClients] = useState<Client[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [newClient, setNewClient] = useState({
-    name: "",
-    description: "",
-    agents: [] as string[]
+  const { toast } = useToast();
+
+  const { data: clients = [], isLoading } = useQuery<Client[]>({
+    queryKey: ["/api/clients"],
   });
+
+  const createClientMutation = useMutation({
+    mutationFn: async (data: CreateClientForm) => {
+      return apiRequest("/api/clients", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
+      setIsCreateModalOpen(false);
+      form.reset();
+      toast({
+        title: "Success",
+        description: "Client created successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create client",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteClientMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/clients/${id}`, {
+        method: "DELETE",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
+      toast({
+        title: "Success",
+        description: "Client deleted successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete client",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const form = useForm<CreateClientForm>({
+    resolver: zodResolver(createClientFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      agents: [],
+    },
+  });
+
+  const onSubmit = (data: CreateClientForm) => {
+    createClientMutation.mutate(data);
+  };
+
+  const handleDeleteClient = (id: number) => {
+    if (confirm("Are you sure you want to delete this client?")) {
+      deleteClientMutation.mutate(id);
+    }
+  };
 
   const availableAgents = [
     { id: "github-agent", name: "GitHub Agent", description: "Repository management" },
     { id: "gmail-agent", name: "Gmail Agent", description: "Email automation" }
   ];
-
-  const handleCreateClient = () => {
-    if (!newClient.name.trim()) return;
-    
-    const client: Client = {
-      id: `client-${Date.now()}`,
-      name: newClient.name,
-      description: newClient.description,
-      agents: [...newClient.agents]
-    };
-    
-    setClients([...clients, client]);
-    setNewClient({ name: "", description: "", agents: [] });
-    setIsCreateModalOpen(false);
-  };
-
-  const toggleAgent = (agentId: string) => {
-    setNewClient(prev => ({
-      ...prev,
-      agents: prev.agents.includes(agentId)
-        ? prev.agents.filter(a => a !== agentId)
-        : [...prev.agents, agentId]
-    }));
-  };
 
   const getAgentDetails = (agentId: string) => {
     return availableAgents.find(a => a.id === agentId);

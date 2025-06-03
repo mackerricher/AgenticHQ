@@ -1,10 +1,11 @@
 import { 
-  users, secrets, chatMessages, plans, planExecutions,
+  users, secrets, chatMessages, plans, planExecutions, clients,
   type User, type InsertUser,
   type Secret, type InsertSecret,
   type ChatMessage, type InsertChatMessage,
   type Plan, type InsertPlan,
-  type PlanExecution, type InsertPlanExecution
+  type PlanExecution, type InsertPlanExecution,
+  type Client, type InsertClient
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
@@ -159,6 +160,37 @@ export class DatabaseStorage implements IStorage {
       .where(eq(planExecutions.id, id))
       .returning();
     return execution || undefined;
+  }
+
+  async getClients(): Promise<Client[]> {
+    return await db.select().from(clients).orderBy(clients.createdAt);
+  }
+
+  async getClient(id: number): Promise<Client | undefined> {
+    const [client] = await db.select().from(clients).where(eq(clients.id, id));
+    return client || undefined;
+  }
+
+  async createClient(insertClient: InsertClient): Promise<Client> {
+    const [client] = await db
+      .insert(clients)
+      .values(insertClient)
+      .returning();
+    return client;
+  }
+
+  async updateClient(id: number, updates: Partial<Client>): Promise<Client | undefined> {
+    const [client] = await db
+      .update(clients)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(clients.id, id))
+      .returning();
+    return client || undefined;
+  }
+
+  async deleteClient(id: number): Promise<boolean> {
+    const result = await db.delete(clients).where(eq(clients.id, id));
+    return Boolean(result.rowCount);
   }
 }
 
