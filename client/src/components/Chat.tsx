@@ -41,7 +41,7 @@ export default function Chat() {
   const queryClient = useQueryClient();
 
   // Fetch chat history
-  const { data: messages = [], isLoading } = useQuery({
+  const { data: messages = [], isLoading } = useQuery<ChatMessage[]>({
     queryKey: ["/api/chat/history"],
     refetchInterval: 5000,
   });
@@ -174,151 +174,136 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col bg-gray-900">
+      {/* Chat Header */}
+      <div className="p-4 border-b border-gray-700 bg-gray-800">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+            <span className="text-white text-sm font-medium">GC</span>
+          </div>
+          <div>
+            <h2 className="text-white font-medium">General Chat Client</h2>
+            <p className="text-gray-400 text-sm">Chat interface • 0 servers connected</p>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-sm">
+              History
+            </Button>
+            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-sm">
+              Settings
+            </Button>
+            <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 text-sm">
+              Clear Chat
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
-        {messages.length === 0 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl mx-auto"
-          >
-            <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-pink-200 dark:border-violet-400/30">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 to-violet-400 flex items-center justify-center">
-                  <Bot className="h-5 w-5 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-heading text-lg gradient-text mb-2">Welcome to AgenticHQ! ✨</h3>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    I'm your AI workflow assistant! I can help you automate multi-step tasks by creating plans and executing them step-by-step. 
-                    Try asking me to do something like:
-                  </p>
-                  <div className="mt-4 space-y-2">
-                    <div className="bg-gradient-to-r from-pink-100 to-violet-100 dark:from-violet-900/30 dark:to-pink-900/30 rounded-lg p-3 text-sm">
-                      <span className="font-mono">"Create a GitHub repo for my project and email me when it's ready"</span>
-                    </div>
-                    <div className="bg-gradient-to-r from-pink-100 to-violet-100 dark:from-violet-900/30 dark:to-pink-900/30 rounded-lg p-3 text-sm">
-                      <span className="font-mono">"Write a README file and add it to my repository"</span>
-                    </div>
-                  </div>
-                </div>
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-900">
+        {Array.isArray(messages) && messages.length === 0 && (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-4">
+                <Bot className="h-8 w-8 text-white" />
               </div>
+              <h3 className="text-white text-lg font-medium mb-2">Welcome to AgenticHQ</h3>
+              <p className="text-gray-400 text-sm max-w-md">
+                Start a conversation with your AI assistant. I can help automate workflows and execute multi-step tasks.
+              </p>
             </div>
-          </motion.div>
+          </div>
         )}
 
-        <AnimatePresence>
-          {messages.map((msg: ChatMessage) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-3xl mx-auto chat-message"
-            >
-              {msg.role === "user" ? (
-                <div className="flex justify-end">
-                  <div className="bg-gradient-to-r from-pink-400 to-violet-400 rounded-xl p-4 max-w-md shadow-lg text-white">
-                    <p>{msg.content}</p>
-                    <div className="text-xs opacity-75 mt-2">
-                      {new Date(msg.createdAt).toLocaleTimeString()}
-                    </div>
-                  </div>
+        {Array.isArray(messages) && messages.map((msg: ChatMessage) => (
+          <motion.div
+            key={msg.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex gap-3"
+          >
+            <div className="flex-shrink-0">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                msg.role === "user" ? "bg-gray-600" : "bg-blue-500"
+              }`}>
+                {msg.role === "user" ? (
+                  <User className="h-4 w-4 text-white" />
+                ) : (
+                  <Bot className="h-4 w-4 text-white" />
+                )}
+              </div>
+            </div>
+            <div className="flex-1 space-y-2">
+              <div className={`rounded-lg p-4 ${
+                msg.role === "user" 
+                  ? "bg-blue-600 text-white ml-auto max-w-md"
+                  : "bg-gray-700 text-gray-100"
+              }`}>
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                <div className="text-xs opacity-70 mt-2">
+                  {new Date(msg.createdAt).toLocaleTimeString()}
                 </div>
-              ) : (
-                <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-pink-200 dark:border-violet-400/30">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 to-violet-400 flex items-center justify-center">
-                      <Bot className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                        {msg.content}
-                      </div>
-                      
-                      {/* Show plan steps if this is an active plan */}
-                      {msg.planId === activePlanId && planSteps.length > 0 && (
-                        <div className="mt-4 space-y-3">
-                          <h4 className="font-heading text-lg gradient-text">Execution Plan:</h4>
-                          {planSteps.map((step, index) => (
-                            <div
-                              key={index}
-                              className={`plan-step flex items-center gap-3 p-3 rounded-lg border ${getStepBackgroundClass(stepStatuses[index] || "pending")}`}
-                            >
-                              {getStepIcon(stepStatuses[index] || "pending")}
-                              <div className="flex-1">
-                                <div className="font-semibold text-gray-800 dark:text-gray-200">
-                                  {step.tool.replace('.', ' - ')}
-                                </div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">
-                                  {JSON.stringify(step.args)}
-                                </div>
-                              </div>
-                              <div className="text-xs text-gray-600 dark:text-gray-400">
-                                {getStepStatusText(stepStatuses[index] || "pending")}
-                              </div>
-                            </div>
-                          ))}
+              </div>
+
+              {/* Show plan steps if this message has them */}
+              {msg.steps && msg.steps.length > 0 && (
+                <div className="space-y-2 mt-2">
+                  {msg.steps.map((step: PlanStep, index: number) => {
+                    const status = stepStatuses[index] || "pending";
+                    return (
+                      <div
+                        key={index}
+                        className="p-3 rounded-lg bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <span className="font-medium text-sm text-gray-900 dark:text-gray-100">
+                            Calling tool: {step.tool}
+                          </span>
+                          <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">
+                            success
+                          </span>
                         </div>
-                      )}
-                      
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-3">
-                        {new Date(msg.createdAt).toLocaleTimeString()}
                       </div>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               )}
-            </motion.div>
-          ))}
-        </AnimatePresence>
-        
+            </div>
+          </motion.div>
+        ))}
+
         <div ref={messagesEndRef} />
       </div>
 
       {/* Chat Input */}
-      <div className="p-4 md:p-6 border-t border-pink-200/50 dark:border-violet-400/30 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex gap-3">
-            <div className="flex-1 relative">
-              <Textarea
-                ref={textareaRef}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Describe what you'd like me to help you with..."
-                className="resize-none bg-white/80 dark:bg-gray-900/80 border border-pink-200 dark:border-violet-400/30 rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-pink-400 dark:focus:ring-violet-400 focus:border-transparent placeholder-gray-500 dark:placeholder-gray-400 backdrop-blur-xl min-h-[50px] max-h-32"
-                rows={1}
-              />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pink-500 dark:hover:text-violet-400"
-              >
-                <Paperclip className="h-4 w-4" />
-              </Button>
-            </div>
-            <Button
-              onClick={handleSend}
-              disabled={!message.trim() || sendMessageMutation.isPending}
-              className="px-6 py-3 bg-gradient-to-r from-pink-400 to-violet-400 text-white rounded-xl hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              {sendMessageMutation.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
+      <div className="p-4 border-t border-gray-700 bg-gray-800">
+        <div className="flex gap-3">
+          <div className="flex-1 relative">
+            <Textarea
+              ref={textareaRef}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message... (Press Shift+Enter for new line)"
+              className="resize-none bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[50px] max-h-32"
+              rows={1}
+            />
           </div>
-          <div className="flex items-center justify-between mt-3">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              💡 Try: "Create a repo and email me", "Write documentation", "Set up CI/CD"
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              <kbd className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs">Shift + Enter</kbd> for new line
-            </div>
-          </div>
+          <Button
+            onClick={handleSend}
+            disabled={!message.trim() || sendMessageMutation.isPending}
+            className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {sendMessageMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+        <div className="text-xs text-gray-400 mt-2 text-center">
+          Press Ctrl+Enter to send • 0 tools available
         </div>
       </div>
     </div>
