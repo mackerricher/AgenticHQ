@@ -25,6 +25,8 @@ type CreateAgentForm = z.infer<typeof createAgentFormSchema>;
 
 export default function Agents() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [selectedSubAgents, setSelectedSubAgents] = useState<string[]>([]);
   const { toast } = useToast();
@@ -135,6 +137,13 @@ export default function Agents() {
         ? prev.filter(id => id !== subAgentId.toString())
         : [...prev, subAgentId.toString()]
     );
+  };
+
+  const handleEditAgent = (agent: Agent) => {
+    setEditingAgent(agent);
+    setSelectedTools(Array.isArray(agent.tools) ? agent.tools : []);
+    setSelectedSubAgents(Array.isArray(agent.subAgents) ? agent.subAgents : []);
+    setIsEditModalOpen(true);
   };
 
   const handleDeleteAgent = (id: number) => {
@@ -323,6 +332,7 @@ export default function Agents() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => handleEditAgent(agent)}
                         className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
                         <Settings className="h-4 w-4" />
@@ -362,7 +372,7 @@ export default function Agents() {
                       <div className="flex flex-wrap gap-1 mt-1">
                         {Array.isArray(agent.subAgents) && agent.subAgents.length > 0 ? (
                           agent.subAgents.map((subAgentId, index) => {
-                            const subAgent = availableSubAgents?.find(sa => sa.id === subAgentId);
+                            const subAgent = availableSubAgents?.find(sa => sa.id === parseInt(subAgentId));
                             return (
                               <Badge key={index} variant="outline" className="text-xs">
                                 {subAgent?.name || `Sub-Agent ${subAgentId}`}
