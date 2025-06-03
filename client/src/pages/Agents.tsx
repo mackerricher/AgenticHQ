@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Github, Mail, Wrench, Users, Trash2, Loader2 } from "lucide-react";
+import { Plus, Github, Mail, Wrench, Users, Trash2, Loader2, Settings } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { insertAgentSchema, type Agent, type SubAgent } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -303,7 +303,7 @@ export default function Agents() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             {agents.map((agent) => (
               <Card key={agent.id} className="border border-gray-200 dark:border-gray-700">
                 <CardHeader className="pb-3">
@@ -319,14 +319,23 @@ export default function Agents() {
                         </Badge>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteAgent(agent.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteAgent(agent.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -352,11 +361,14 @@ export default function Agents() {
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sub-Agents:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {Array.isArray(agent.subAgents) && agent.subAgents.length > 0 ? (
-                          agent.subAgents.map((subAgentId, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              Sub-Agent {subAgentId}
-                            </Badge>
-                          ))
+                          agent.subAgents.map((subAgentId, index) => {
+                            const subAgent = availableSubAgents?.find(sa => sa.id === subAgentId);
+                            return (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {subAgent?.name || `Sub-Agent ${subAgentId}`}
+                              </Badge>
+                            );
+                          })
                         ) : (
                           <span className="text-xs text-gray-500 dark:text-gray-400">No sub-agents assigned</span>
                         )}

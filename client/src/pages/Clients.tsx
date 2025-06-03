@@ -190,7 +190,7 @@ export default function Clients() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
             {clients.map((client) => (
               <Card key={client.id} className="border border-gray-200 dark:border-gray-700">
                 <CardHeader className="pb-3">
