@@ -33,19 +33,19 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
   const queryClient = useQueryClient();
 
   // Query key statuses
-  const { data: openaiStatus, isLoading: openaiLoading } = useQuery({
+  const { data: openaiStatus = { hasKey: false }, isLoading: openaiLoading } = useQuery({
     queryKey: ["/api/keys/openai"],
   });
 
-  const { data: deepseekStatus, isLoading: deepseekLoading } = useQuery({
+  const { data: deepseekStatus = { hasKey: false }, isLoading: deepseekLoading } = useQuery({
     queryKey: ["/api/keys/deepseek"],
   });
 
-  const { data: githubStatus, isLoading: githubLoading } = useQuery({
+  const { data: githubStatus = { hasKey: false }, isLoading: githubLoading } = useQuery({
     queryKey: ["/api/keys/github"],
   });
 
-  const { data: gmailStatus, isLoading: gmailLoading } = useQuery({
+  const { data: gmailStatus = { hasKey: false }, isLoading: gmailLoading } = useQuery({
     queryKey: ["/api/keys/gmail"],
   });
 
