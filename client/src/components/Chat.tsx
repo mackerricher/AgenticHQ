@@ -126,32 +126,6 @@ export default function Chat() {
     autoResize();
   }, [message]);
 
-  const getStepIcon = (status: string) => {
-    switch (status) {
-      case "completed":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "running":
-        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
-      case "failed":
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
-      default:
-        return <Clock className="h-4 w-4 text-gray-400" />;
-    }
-  };
-
-  const getStepStatusText = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "✓ Completed";
-      case "running":
-        return "⏳ Running";
-      case "failed":
-        return "✗ Failed";
-      default:
-        return "⏸️ Pending";
-    }
-  };
-
   const getStepBackgroundClass = (status: string) => {
     switch (status) {
       case "completed":

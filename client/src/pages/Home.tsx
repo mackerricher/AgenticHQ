@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Chat from "@/components/Chat";
-import PlanTimeline from "@/components/PlanTimeline";
 import SettingsModal from "@/components/SettingsModal";
 import { useTheme } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/button";
@@ -60,11 +59,6 @@ export default function Home() {
       <main className="flex-1 flex flex-col relative z-10 md:mt-0 mt-20">
         <div className="flex-1 flex">
           <Chat />
-          
-          {/* Desktop Plan Timeline */}
-          <div className="hidden xl:block">
-            <PlanTimeline />
-          </div>
         </div>
       </main>
       
