@@ -175,9 +175,9 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col h-full">
       {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 pb-32">
         {messages.length === 0 && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -278,8 +278,8 @@ export default function Chat() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Chat Input */}
-      <div className="p-4 md:p-6 border-t border-pink-200/50 dark:border-violet-400/30 bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl">
+      {/* Chat Input - Fixed at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 md:left-80 p-4 md:p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <div className="max-w-3xl mx-auto">
           <div className="flex gap-3">
             <div className="flex-1 relative">
@@ -288,14 +288,14 @@ export default function Chat() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Describe what you'd like me to help you with..."
-                className="resize-none bg-white/80 dark:bg-gray-900/80 border border-pink-200 dark:border-violet-400/30 rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-pink-400 dark:focus:ring-violet-400 focus:border-transparent placeholder-gray-500 dark:placeholder-gray-400 backdrop-blur-xl min-h-[50px] max-h-32"
+                placeholder="Message AgenticHQ..."
+                className="resize-none bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 pr-12 focus:ring-2 focus:ring-gray-500 focus:border-transparent placeholder-gray-500 dark:placeholder-gray-400 min-h-[50px] max-h-32"
                 rows={1}
               />
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pink-500 dark:hover:text-violet-400"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
                 <Paperclip className="h-4 w-4" />
               </Button>
@@ -303,7 +303,7 @@ export default function Chat() {
             <Button
               onClick={handleSend}
               disabled={!message.trim() || sendMessageMutation.isPending}
-              className="px-6 py-3 bg-gradient-to-r from-pink-400 to-violet-400 text-white rounded-xl hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="px-4 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {sendMessageMutation.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -311,11 +311,6 @@ export default function Chat() {
                 <Send className="h-4 w-4" />
               )}
             </Button>
-          </div>
-          <div className="flex justify-end mt-3">
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              <kbd className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs">Shift + Enter</kbd> for new line
-            </div>
           </div>
         </div>
       </div>
