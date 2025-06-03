@@ -48,7 +48,7 @@ export default function Chat() {
 
   // Fetch client data to get assigned agents and their tools
   const { data: client } = useQuery({
-    queryKey: ["/api/clients", clientId],
+    queryKey: [`/api/clients/${clientId}`],
     enabled: !!clientId,
   });
 
