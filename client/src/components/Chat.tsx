@@ -35,36 +35,116 @@ function PlanStepsDisplay({ planId, activePlanId }: PlanStepsDisplayProps) {
   }
 
   const steps = Array.isArray(plan.steps) ? plan.steps : JSON.parse(plan.steps);
+  const executions = plan.executions || [];
+
+  const getStepStatus = (stepIndex: number) => {
+    const execution = executions.find((e: any) => e.stepIndex === stepIndex);
+    return execution?.status || "pending";
+  };
+
+  const getStepResult = (stepIndex: number) => {
+    const execution = executions.find((e: any) => e.stepIndex === stepIndex);
+    if (execution?.result) {
+      try {
+        return JSON.parse(execution.result);
+      } catch {
+        return execution.result;
+      }
+    }
+    return null;
+  };
+
+  const getStepError = (stepIndex: number) => {
+    const execution = executions.find((e: any) => e.stepIndex === stepIndex);
+    return execution?.error;
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "completed":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "failed":
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
+      case "running":
+        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
+      default:
+        return <Clock className="h-4 w-4 text-gray-400" />;
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "✓ Completed";
+      case "failed":
+        return "✗ Failed";
+      case "running":
+        return "⏳ Running";
+      default:
+        return "⏸ Pending";
+    }
+  };
+
+  const getStatusBackground = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-400/30";
+      case "failed":
+        return "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-400/30";
+      case "running":
+        return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-400/30";
+      default:
+        return "bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-400/30";
+    }
+  };
 
   return (
     <div className="mt-4 space-y-3">
       <h4 className="font-medium text-gray-900 dark:text-gray-100">Execution Steps:</h4>
-      {steps.map((step: any, index: number) => (
-        <div
-          key={index}
-          className="flex items-start gap-3 p-3 rounded-lg border bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-400/30"
-        >
-          <AlertCircle className="h-4 w-4 text-red-500" />
-          <div className="flex-1 min-w-0">
-            <div className="font-medium text-gray-800 dark:text-gray-200">
-              {step.tool.replace('.', ' → ')}
+      {steps.map((step: any, index: number) => {
+        const status = getStepStatus(index);
+        const result = getStepResult(index);
+        const error = getStepError(index);
+        
+        return (
+          <div
+            key={index}
+            className={`flex items-start gap-3 p-3 rounded-lg border ${getStatusBackground(status)}`}
+          >
+            {getStatusIcon(status)}
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-gray-800 dark:text-gray-200">
+                {step.tool.replace('.', ' → ')}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                {Object.entries(step.args).map(([key, value]) => (
+                  <span key={key} className="mr-3">
+                    {key}: <span className="font-mono">{String(value)}</span>
+                  </span>
+                ))}
+              </div>
+              
+              {status === "completed" && result && (
+                <div className="text-sm text-green-600 dark:text-green-400 mt-2 p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
+                  <strong>Success:</strong> Repository created successfully at{" "}
+                  <a href={result.html_url} target="_blank" rel="noopener noreferrer" className="underline">
+                    {result.html_url}
+                  </a>
+                </div>
+              )}
+              
+              {status === "failed" && error && (
+                <div className="text-sm text-red-600 dark:text-red-400 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
+                  <strong>Error:</strong> {error}
+                </div>
+              )}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {Object.entries(step.args).map(([key, value]) => (
-                <span key={key} className="mr-3">
-                  {key}: <span className="font-mono">{String(value)}</span>
-                </span>
-              ))}
-            </div>
-            <div className="text-sm text-red-600 dark:text-red-400 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
-              <strong>Error:</strong> {step.tool.includes('github') ? 'GitHub' : step.tool.includes('gmail') ? 'Gmail' : 'API'} token not configured. Please add your credentials in the Connections settings.
+            <div className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
+              {getStatusText(status)}
             </div>
           </div>
-          <div className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
-            ✗ Failed
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
