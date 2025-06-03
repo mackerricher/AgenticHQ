@@ -1,12 +1,13 @@
 import { 
-  users, secrets, chatMessages, plans, planExecutions, clients, agents,
+  users, secrets, chatMessages, plans, planExecutions, clients, agents, subAgents,
   type User, type InsertUser,
   type Secret, type InsertSecret,
   type ChatMessage, type InsertChatMessage,
   type Plan, type InsertPlan,
   type PlanExecution, type InsertPlanExecution,
   type Client, type InsertClient,
-  type Agent, type InsertAgent
+  type Agent, type InsertAgent,
+  type SubAgent, type InsertSubAgent
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
@@ -51,6 +52,13 @@ export interface IStorage {
   createAgent(agent: InsertAgent): Promise<Agent>;
   updateAgent(id: number, updates: Partial<Agent>): Promise<Agent | undefined>;
   deleteAgent(id: number): Promise<boolean>;
+
+  // SubAgents
+  getSubAgents(): Promise<SubAgent[]>;
+  getSubAgent(id: number): Promise<SubAgent | undefined>;
+  createSubAgent(subAgent: InsertSubAgent): Promise<SubAgent>;
+  updateSubAgent(id: number, updates: Partial<SubAgent>): Promise<SubAgent | undefined>;
+  deleteSubAgent(id: number): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {

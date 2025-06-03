@@ -64,6 +64,15 @@ export const agents = pgTable("agents", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const subAgents = pgTable("sub_agents", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  tools: jsonb("tools").notNull().default([]), // Array of tool names
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -109,6 +118,12 @@ export const insertAgentSchema = createInsertSchema(agents).pick({
   type: true,
 });
 
+export const insertSubAgentSchema = createInsertSchema(subAgents).pick({
+  name: true,
+  description: true,
+  tools: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -130,6 +145,9 @@ export type InsertClient = z.infer<typeof insertClientSchema>;
 
 export type Agent = typeof agents.$inferSelect;
 export type InsertAgent = z.infer<typeof insertAgentSchema>;
+
+export type SubAgent = typeof subAgents.$inferSelect;
+export type InsertSubAgent = z.infer<typeof insertSubAgentSchema>;
 
 // Plan step types
 export interface PlanStep {

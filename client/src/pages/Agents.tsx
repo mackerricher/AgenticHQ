@@ -37,10 +37,10 @@ export default function Agents() {
     { id: "sendEmail", name: "sendEmail", description: "Send emails via Gmail" },
   ];
 
-  const availableSubAgents = [
-    { id: "file-processor", name: "File Processor", description: "Process file operations" },
-    { id: "data-analyzer", name: "Data Analyzer", description: "Analyze data patterns" },
-  ];
+  // Fetch actual sub-agents from the database
+  const { data: availableSubAgents = [] } = useQuery({
+    queryKey: ["/api/subagents"],
+  });
 
   const { data: agents = [], isLoading } = useQuery<Agent[]>({
     queryKey: ["/api/agents"],
