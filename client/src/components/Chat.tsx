@@ -126,16 +126,43 @@ export default function Chat() {
     autoResize();
   }, [message]);
 
+  // Helper functions for inline timeline
+  const getStepIcon = (status: string) => {
+    switch (status) {
+      case "completed":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "running":
+        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
+      case "failed":
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return <Clock className="h-4 w-4 text-gray-400" />;
+    }
+  };
+
   const getStepBackgroundClass = (status: string) => {
     switch (status) {
       case "completed":
-        return "bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-green-200 dark:border-green-400/30";
+        return "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-400/30";
       case "running":
-        return "bg-gradient-to-r from-blue-50 to-violet-50 dark:from-blue-900/20 dark:to-violet-900/20 border-blue-200 dark:border-blue-400/30";
+        return "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-400/30";
       case "failed":
-        return "bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 border-red-200 dark:border-red-400/30";
+        return "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-400/30";
       default:
-        return "bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 border-gray-200 dark:border-gray-600/30";
+        return "bg-gray-50 dark:bg-gray-800/20 border-gray-200 dark:border-gray-600/30";
+    }
+  };
+
+  const getStepStatusText = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "✓ Completed";
+      case "running":
+        return "⏳ Running";
+      case "failed":
+        return "✗ Failed";
+      default:
+        return "⏸ Pending";
     }
   };
 
