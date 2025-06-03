@@ -1,0 +1,59 @@
+import { apiRequest } from "./queryClient";
+
+export interface ChatResponse {
+  assistantMessage: string;
+  planId?: number;
+  steps?: any[];
+}
+
+export interface KeyStatus {
+  hasKey: boolean;
+  updatedAt?: string;
+}
+
+export const api = {
+  chat: {
+    send: async (userMessage: string): Promise<ChatResponse> => {
+      const response = await apiRequest("POST", "/api/chat", { userMessage });
+      return response.json();
+    },
+    
+    getHistory: async () => {
+      const response = await apiRequest("GET", "/api/chat/history");
+      return response.json();
+    },
+    
+    clearHistory: async () => {
+      const response = await apiRequest("DELETE", "/api/chat/history");
+      return response.json();
+    },
+  },
+
+  plans: {
+    get: async (id: number) => {
+      const response = await apiRequest("GET", `/api/plans/${id}`);
+      return response.json();
+    },
+    
+    events: (id: number) => {
+      return new EventSource(`/api/plans/${id}/events`);
+    },
+  },
+
+  keys: {
+    get: async (provider: string): Promise<KeyStatus> => {
+      const response = await apiRequest("GET", `/api/keys/${provider}`);
+      return response.json();
+    },
+    
+    set: async (provider: string, key: string) => {
+      const response = await apiRequest("POST", `/api/keys/${provider}`, { key });
+      return response.json();
+    },
+    
+    delete: async (provider: string) => {
+      const response = await apiRequest("DELETE", `/api/keys/${provider}`);
+      return response.json();
+    },
+  },
+};

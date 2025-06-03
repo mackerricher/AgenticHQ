@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 20 14% 4%;
+  --muted: 60 5% 96%;
+  --muted-foreground: 25 5% 45%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14% 4%;
+  --border: 20 6% 90%;
+  --input: 20 6% 90%;
+  --primary: 330 81% 60%; /* Pink */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 60 5% 96%;
+  --secondary-foreground: 24 10% 10%;
+  --accent: 60 5% 96%;
+  --accent-foreground: 24 10% 10%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 60 9% 98%;
+  --ring: 330 81% 60%;
+  --radius: 0.75rem;
+  
+  /* Gen Alpha colors */
+  --gen-pink: 330 81% 60%; /* #F472B6 */
+  --gen-violet: 262 83% 58%; /* #A78BFA */
+  --gen-blue: 213 94% 68%; /* #60A5FA */
+}
+
+.dark {
+  --background: 240 10% 4%;
+  --foreground: 0 0% 98%;
+  --muted: 240 4% 16%;
+  --muted-foreground: 240 5% 65%;
+  --popover: 240 10% 4%;
+  --popover-foreground: 0 0% 98%;
+  --card: 240 10% 4%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 4% 16%;
+  --input: 240 4% 16%;
+  --primary: 330 81% 60%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 4% 16%;
+  --secondary-foreground: 0 0% 98%;
+  --accent: 240 4% 16%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 262 83% 58%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-pink-300 via-blue-200 to-violet-200 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 min-h-screen font-serif antialiased transition-colors duration-500;
+    font-family: 'Crimson Text', serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lilita One', cursive;
+  }
+}
+
+@layer components {
+  .glitter-overlay {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(244, 114, 182, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.2) 0%, transparent 50%);
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #F472B6, #A78BFA, #60A5FA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .glassmorphism {
+    background: rgba(15, 15, 35, 0.4);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+  }
+  
+  .chat-message {
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .plan-step {
+    transition: all 0.3s ease;
+  }
+  
+  .plan-step:hover {
+    transform: scale(1.02);
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s infinite;
+  }
+  
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+}
