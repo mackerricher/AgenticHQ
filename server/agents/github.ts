@@ -68,26 +68,51 @@ export class GitHubAgent {
         };
       }
 
-      // For MVP, simulate adding a file
-      const mockResult = {
-        content: {
-          name: path.split('/').pop(),
-          path,
-          sha: Math.random().toString(36).substring(2, 15),
-          size: content.length,
-          html_url: `https://github.com/user/${repo}/blob/main/${path}`,
-        },
-        commit: {
-          sha: Math.random().toString(36).substring(2, 15),
-          message: `Add ${path}`,
+      // Create Octokit instance with the user's token
+      const octokit = new Octokit({
+        auth: token,
+      });
+
+      // Get the authenticated user to determine the owner
+      const { data: user } = await octokit.rest.users.getAuthenticated();
+      const owner = user.login;
+
+      // Convert content to base64
+      const contentBase64 = Buffer.from(content, 'utf8').toString('base64');
+
+      // Create or update the file
+      const response = await octokit.rest.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path,
+        message: `Add ${path}`,
+        content: contentBase64,
+      });
+
+      return { 
+        success: true, 
+        result: {
+          content: response.data.content,
+          commit: response.data.commit,
+          html_url: response.data.content?.html_url,
         }
       };
-
-      return { success: true, result: mockResult };
     } catch (error) {
+      let errorMessage = "Failed to add file to repository";
+      
+      if (error instanceof Error) {
+        if (error.message.includes("401")) {
+          errorMessage = "Invalid GitHub token. Please check your Personal Access Token in settings.";
+        } else if (error.message.includes("404")) {
+          errorMessage = "Repository not found. Make sure the repository exists and you have access.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : "Failed to add file to repository" 
+        error: errorMessage
       };
     }
   }
