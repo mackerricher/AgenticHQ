@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRoute } from "wouter";
 import { 
   Send, 
   Paperclip, 
@@ -31,6 +32,9 @@ interface PlanStep {
 }
 
 export default function Chat() {
+  const [match, params] = useRoute("/chat/:clientId");
+  const clientId = params?.clientId ? parseInt(params.clientId) : null;
+  
   const [message, setMessage] = useState("");
   const [activePlanId, setActivePlanId] = useState<number | null>(null);
   const [planSteps, setPlanSteps] = useState<PlanStep[]>([]);
@@ -40,9 +44,15 @@ export default function Chat() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Fetch chat history
+  // Fetch client data to get assigned agents and their tools
+  const { data: client } = useQuery({
+    queryKey: ["/api/clients", clientId],
+    enabled: !!clientId,
+  });
+
+  // Fetch chat history for this client
   const { data: messages = [], isLoading } = useQuery({
-    queryKey: ["/api/chat/history"],
+    queryKey: ["/api/chat/history", clientId],
     refetchInterval: 5000,
   });
 

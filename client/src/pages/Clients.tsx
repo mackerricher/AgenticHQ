@@ -386,14 +386,6 @@ export default function Clients() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleChatWithClient(client)}
-                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950"
-                      >
-                        <MessageCircle className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
                         onClick={() => handleEditClient(client)}
                         className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
@@ -414,7 +406,7 @@ export default function Clients() {
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {client.description}
                   </p>
-                  <div>
+                  <div className="mb-4">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Agents:</span>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {Array.isArray(client.agents) && client.agents.length > 0 ? (
@@ -430,6 +422,15 @@ export default function Clients() {
                         <span className="text-xs text-gray-500 dark:text-gray-400">No agents assigned</span>
                       )}
                     </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={() => handleChatWithClient(client)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Chat
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

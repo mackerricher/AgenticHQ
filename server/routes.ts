@@ -291,6 +291,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Client-specific chat routes
+  app.get("/api/chat/history/:clientId", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.clientId);
+      // For now, return the general chat history - can be extended to be client-specific
+      const messages = await storage.getChatMessages();
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      res.status(500).json({ error: "Failed to fetch chat history" });
+    }
+  });
+
+  app.post("/api/chat/send/:clientId", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.clientId);
+      const { message } = req.body;
+
+      if (!message?.trim()) {
+        return res.status(400).json({ error: "Message is required" });
+      }
+
+      // Get client data to access assigned agent tools
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      // Get available tools from client's assigned agents
+      const availableTools = planRunner.getAllAvailableTools();
+
+      // Store user message
+      await storage.createChatMessage({
+        role: "user",
+        content: message.trim(),
+      });
+
+      // Generate plan using OpenAI with client-specific tools
+      const plan = await openaiService.generatePlan(message.trim(), availableTools);
+
+      // Create plan record
+      const planRecord = await storage.createPlan({
+        userMessage: message.trim(),
+        steps: JSON.stringify(plan),
+        status: "pending",
+      });
+
+      // Execute plan asynchronously
+      planRunner.executePlan(planRecord.id, plan);
+
+      // Generate and store assistant response
+      const assistantResponse = await openaiService.generateResponse(message.trim(), { planId: planRecord.id, steps: plan });
+      
+      const assistantMessage = await storage.createChatMessage({
+        role: "assistant",
+        content: assistantResponse,
+        planId: planRecord.id,
+      });
+
+      res.json({
+        assistantMessage: assistantResponse,
+        planId: planRecord.id,
+        steps: plan,
+      });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      res.status(500).json({ error: "Failed to send message" });
+    }
+  });
+
   app.post("/api/clients", async (req, res) => {
     try {
       const { insertClientSchema } = await import("@shared/schema");
