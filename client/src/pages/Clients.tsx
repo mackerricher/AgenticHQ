@@ -252,7 +252,7 @@ export default function Clients() {
                         >
                           <div className="text-left">
                             <div className="font-medium">{agent.name}</div>
-                            <div className="text-xs opacity-70">{agent.description.length > 60 ? agent.description.substring(0, 60) + '...' : agent.description}</div>
+                            <div className="text-xs opacity-70">{agent.description.length > 23 ? agent.description.substring(0, 23) + '...' : agent.description}</div>
                           </div>
                         </Button>
                       ))}
@@ -329,7 +329,7 @@ export default function Clients() {
                         >
                           <div className="text-left">
                             <div className="font-medium">{agent.name}</div>
-                            <div className="text-xs opacity-70">{agent.description.length > 60 ? agent.description.substring(0, 60) + '...' : agent.description}</div>
+                            <div className="text-xs opacity-70">{agent.description.length > 23 ? agent.description.substring(0, 23) + '...' : agent.description}</div>
                           </div>
                         </Button>
                       ))}
