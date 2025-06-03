@@ -324,41 +324,8 @@ export default function Chat() {
                       </div>
                       
                       {/* Show plan steps if this message has a plan */}
-                      {msg.planId && (msg.planId === activePlanId ? planSteps.length > 0 : msg.steps && msg.steps.length > 0) && (
-                        <div className="mt-4 space-y-3">
-                          <h4 className="font-medium text-gray-900 dark:text-gray-100">Execution Steps:</h4>
-                          {(msg.planId === activePlanId ? planSteps : msg.steps || []).map((step, index) => {
-                            const status = msg.planId === activePlanId ? (stepStatuses[index] || "pending") : "failed";
-                            return (
-                              <div
-                                key={index}
-                                className={`flex items-start gap-3 p-3 rounded-lg border ${getStepBackgroundClass(status)}`}
-                              >
-                                {getStepIcon(status)}
-                                <div className="flex-1 min-w-0">
-                                  <div className="font-medium text-gray-800 dark:text-gray-200">
-                                    {step.tool.replace('.', ' → ')}
-                                  </div>
-                                  <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                    {Object.entries(step.args).map(([key, value]) => (
-                                      <span key={key} className="mr-3">
-                                        {key}: <span className="font-mono">{String(value)}</span>
-                                      </span>
-                                    ))}
-                                  </div>
-                                  {status === "failed" && (
-                                    <div className="text-sm text-red-600 dark:text-red-400 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
-                                      <strong>Error:</strong> GitHub token not configured. Please add your GitHub Personal Access Token in settings.
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                                  {getStepStatusText(status)}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
+                      {msg.planId && (
+                        <PlanStepsDisplay planId={msg.planId} activePlanId={activePlanId} />
                       )}
                       
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-3">

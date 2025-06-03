@@ -21,6 +21,7 @@ export const chatMessages = pgTable("chat_messages", {
   id: serial("id").primaryKey(),
   role: text("role").notNull(), // "user" | "assistant"
   content: text("content").notNull(),
+  planId: integer("plan_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -88,6 +89,7 @@ export const insertSecretSchema = createInsertSchema(secrets).pick({
 export const insertChatMessageSchema = createInsertSchema(chatMessages).pick({
   role: true,
   content: true,
+  planId: true,
 });
 
 export const insertPlanSchema = createInsertSchema(plans).pick({
