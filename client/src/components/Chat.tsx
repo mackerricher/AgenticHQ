@@ -175,30 +175,6 @@ export default function Chat() {
 
   return (
     <div className="flex-1 flex flex-col bg-gray-900">
-      {/* Chat Header */}
-      <div className="p-4 border-b border-gray-700 bg-gray-800">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-            <span className="text-white text-sm font-medium">GC</span>
-          </div>
-          <div>
-            <h2 className="text-white font-medium">General Chat Client</h2>
-            <p className="text-gray-400 text-sm">Chat interface • 0 servers connected</p>
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-sm">
-              History
-            </Button>
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white text-sm">
-              Settings
-            </Button>
-            <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 text-sm">
-              Clear Chat
-            </Button>
-          </div>
-        </div>
-      </div>
-
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-900">
         {Array.isArray(messages) && messages.length === 0 && (
@@ -245,28 +221,53 @@ export default function Chat() {
                 </div>
               </div>
 
-              {/* Show plan steps if this message has them */}
-              {msg.steps && msg.steps.length > 0 && (
-                <div className="space-y-2 mt-2">
-                  {msg.steps.map((step: PlanStep, index: number) => {
+              {/* Show inline plan execution if this message triggered a plan */}
+              {msg.planId === activePlanId && planSteps.length > 0 && (
+                <div className="space-y-2 mt-3 border-l-2 border-blue-500 pl-4">
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Executing Plan</div>
+                  {planSteps.map((step: PlanStep, index: number) => {
                     const status = stepStatuses[index] || "pending";
                     return (
                       <div
                         key={index}
-                        className="p-3 rounded-lg bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-700"
+                        className="flex items-center gap-3 py-2"
                       >
-                        <div className="flex items-center gap-2 mb-2">
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span className="font-medium text-sm text-gray-900 dark:text-gray-100">
-                            Calling tool: {step.tool}
-                          </span>
-                          <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">
-                            success
-                          </span>
+                        {getStepIcon(status)}
+                        <div className="flex-1">
+                          <div className="text-sm text-gray-200">
+                            {step.tool.replace(/([A-Z])/g, ' $1').trim()}
+                          </div>
+                          {status === "completed" && (
+                            <div className="text-xs text-green-400">Completed</div>
+                          )}
+                          {status === "failed" && (
+                            <div className="text-xs text-red-400">Failed</div>
+                          )}
+                          {status === "running" && (
+                            <div className="text-xs text-blue-400">Running...</div>
+                          )}
                         </div>
                       </div>
                     );
                   })}
+                </div>
+              )}
+
+              {/* Show static plan steps if message has completed steps */}
+              {msg.steps && msg.steps.length > 0 && msg.planId !== activePlanId && (
+                <div className="space-y-2 mt-3 border-l-2 border-green-500 pl-4">
+                  <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Plan Executed</div>
+                  {msg.steps.map((step: PlanStep, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 py-1"
+                    >
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <div className="text-sm text-gray-200">
+                        {step.tool.replace(/([A-Z])/g, ' $1').trim()}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
