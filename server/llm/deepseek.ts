@@ -33,21 +33,18 @@ For tool-based requests, create steps with:
 - tool: the tool name (e.g., "GitHub.createRepo", "FileCreator.createMarkdown")
 - args: object with the arguments for the tool
 
-IMPORTANT: When creating documentation files (README, installation guides, tutorials), provide comprehensive, detailed, and practical content that fully addresses the user's request. Include step-by-step instructions, commands, code examples, and explanations.
+CRITICAL: When using FileCreator.createMarkdown, the 'contents' parameter must contain the actual detailed content that answers the user's request, not just a title or basic description. 
 
-For installation guides, include:
-- Multiple installation methods (homebrew, direct download, version managers)
-- Prerequisites and system requirements
-- Step-by-step commands with code blocks
-- Verification steps to confirm installation
-- Troubleshooting common issues
-- Next steps or usage examples
+For any documentation request:
+- Generate complete, practical content that fulfills the user's specific needs
+- Include relevant details, instructions, examples, and explanations
+- Write the actual content the user is asking for, not placeholder text
 
 Example plan format:
 {
   "steps": [
     { "tool": "GitHub.createRepo", "args": { "name": "MyProject", "description": "A new project" } },
-    { "tool": "FileCreator.createMarkdown", "args": { "filename": "README.md", "contents": "# NodeJS Installation Guide for Mac\\n\\nThis guide provides multiple methods to install Node.js on macOS.\\n\\n## Prerequisites\\n\\n- macOS 10.15 or later\\n- Administrative access to your Mac\\n\\n## Method 1: Using Homebrew (Recommended)\\n\\n1. Install Homebrew if you haven't already:\\n   \`\`\`bash\\n   /bin/bash -c \\"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\"\\n   \`\`\`\\n\\n2. Install Node.js:\\n   \`\`\`bash\\n   brew install node\\n   \`\`\`\\n\\n3. Verify installation:\\n   \`\`\`bash\\n   node --version\\n   npm --version\\n   \`\`\`\\n\\n## Method 2: Using Node Version Manager (nvm)\\n\\n1. Install nvm:\\n   \`\`\`bash\\n   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash\\n   \`\`\`\\n\\n2. Restart your terminal or run:\\n   \`\`\`bash\\n   source ~/.bashrc\\n   \`\`\`\\n\\n3. Install the latest LTS version:\\n   \`\`\`bash\\n   nvm install --lts\\n   nvm use --lts\\n   \`\`\`\\n\\n## Method 3: Direct Download\\n\\n1. Visit [nodejs.org](https://nodejs.org/)\\n2. Download the macOS installer\\n3. Run the .pkg file and follow the installation wizard\\n\\n## Verification\\n\\nRun these commands to confirm successful installation:\\n\\n\`\`\`bash\\nnode --version\\nnpm --version\\n\`\`\`\\n\\n## Troubleshooting\\n\\n- **Permission errors**: Use \`sudo\` prefix for global npm installs\\n- **PATH issues**: Restart terminal or add Node.js to your PATH\\n- **Version conflicts**: Use nvm to manage multiple Node.js versions\\n\\n## Next Steps\\n\\n- Create your first Node.js project: \`mkdir my-project && cd my-project && npm init -y\`\\n- Install packages: \`npm install express\`\\n- Run JavaScript files: \`node app.js\`" } },
+    { "tool": "FileCreator.createMarkdown", "args": { "filename": "README.md", "contents": "# MyProject\\n\\nA comprehensive description of this project and its purpose.\\n\\n## Installation\\n\\n1. First, install Node.js:\\n   \`\`\`bash\\n   brew install node\\n   \`\`\`\\n\\n2. Clone this repository:\\n   \`\`\`bash\\n   git clone https://github.com/user/MyProject.git\\n   cd MyProject\\n   \`\`\`\\n\\n3. Install dependencies:\\n   \`\`\`bash\\n   npm install\\n   \`\`\`\\n\\n## Usage\\n\\nRun the application:\\n\\n\`\`\`bash\\nnpm start\\n\`\`\`\\n\\n## Features\\n\\n- Feature 1: Description\\n- Feature 2: Description\\n- Feature 3: Description" } },
     { "tool": "GitHub.addFile", "args": { "repo": "MyProject", "path": "README.md", "contentRef": 1 } }
   ]
 }
