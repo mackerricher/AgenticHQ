@@ -74,7 +74,7 @@ export default function SubAgents() {
               </DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name" className="mb-2 block">Name</Label>
                   <Input
                     id="name"
                     value={newSubAgent.name}
@@ -84,7 +84,7 @@ export default function SubAgents() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description" className="mb-2 block">Description</Label>
                   <Textarea
                     id="description"
                     value={newSubAgent.description}

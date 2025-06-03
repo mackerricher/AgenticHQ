@@ -191,7 +191,7 @@ export default function Agents() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Agent Name</FormLabel>
+                        <FormLabel className="mb-2 block">Agent Name</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter agent name" {...field} />
                         </FormControl>
@@ -204,7 +204,7 @@ export default function Agents() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel className="mb-2 block">Description</FormLabel>
                         <FormControl>
                           <Textarea placeholder="Describe what this agent does" {...field} />
                         </FormControl>

@@ -138,7 +138,7 @@ export default function Clients() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Client Name</FormLabel>
+                        <FormLabel className="mb-2 block">Client Name</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter client name" {...field} />
                         </FormControl>
@@ -151,7 +151,7 @@ export default function Clients() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel className="mb-2 block">Description</FormLabel>
                         <FormControl>
                           <Textarea placeholder="Describe what this client does" {...field} />
                         </FormControl>
