@@ -333,7 +333,7 @@ export default function Agents() {
                   <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {agent.description}
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div>
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tools:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
@@ -345,6 +345,20 @@ export default function Agents() {
                           ))
                         ) : (
                           <span className="text-xs text-gray-500 dark:text-gray-400">No tools assigned</span>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sub-Agents:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {Array.isArray(agent.subAgents) && agent.subAgents.length > 0 ? (
+                          agent.subAgents.map((subAgentId, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              Sub-Agent {subAgentId}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-xs text-gray-500 dark:text-gray-400">No sub-agents assigned</span>
                         )}
                       </div>
                     </div>
