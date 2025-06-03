@@ -17,11 +17,11 @@ function Router() {
   return (
     <Layout>
       <Switch>
-        <Route path="/" component={Chat} />
         <Route path="/clients" component={Clients} />
         <Route path="/agents" component={Agents} />
         <Route path="/subagents" component={SubAgents} />
         <Route path="/tools" component={Tools} />
+        <Route path="/chat/:clientId" component={Chat} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

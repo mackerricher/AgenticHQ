@@ -10,10 +10,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Users, Trash2, Loader2, Settings } from "lucide-react";
+import { Plus, Users, Trash2, Loader2, Settings, MessageCircle } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { insertClientSchema, type Client, type Agent } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 
 const createClientFormSchema = insertClientSchema.extend({
   name: z.string().min(1, "Name is required"),
@@ -28,6 +29,7 @@ export default function Clients() {
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const { data: clients = [], isLoading } = useQuery<Client[]>({
     queryKey: ["/api/clients"],
@@ -177,6 +179,11 @@ export default function Clients() {
     if (confirm("Are you sure you want to delete this client?")) {
       deleteClientMutation.mutate(id);
     }
+  };
+
+  const handleChatWithClient = (client: Client) => {
+    // Navigate to chat with client ID as parameter
+    setLocation(`/chat/${client.id}`);
   };
 
   if (isLoading) {
@@ -376,6 +383,14 @@ export default function Clients() {
                       {client.name}
                     </CardTitle>
                     <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleChatWithClient(client)}
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"

@@ -74,21 +74,7 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-2">
-        <Link href="/">
-          <Button
-            variant="ghost"
-            className={`w-full justify-start gap-3 transition-colors ${
-              location === "/" 
-                ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            <MessageCircle className="h-4 w-4" />
-            Chat
-          </Button>
-        </Link>
-
-        <div className="mt-6">
+        <div>
           <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
             Workflow Builder
           </h3>
