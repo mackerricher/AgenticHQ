@@ -26,10 +26,10 @@
   --ring: 330 81% 60%;
   --radius: 0.75rem;
   
-  /* Gen Alpha colors - toned down */
-  --gen-pink: 330 65% 55%; /* Softer pink */
-  --gen-violet: 262 70% 55%; /* Softer violet */
-  --gen-blue: 213 80% 60%; /* Softer blue */
+  /* Gen Alpha colors - stronger tones */
+  --gen-pink: 330 75% 50%; /* Strong pink */
+  --gen-violet: 262 80% 50%; /* Strong violet */
+  --gen-blue: 213 85% 55%; /* Strong blue */
 }
 
 .dark {
@@ -60,10 +60,10 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-pink-200 via-blue-100 to-violet-100 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 min-h-screen font-serif antialiased transition-colors duration-500;
+    @apply bg-gradient-to-br from-gray-100 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen font-serif antialiased transition-colors duration-500;
     font-family: 'Crimson Text', serif;
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 18px;
+    line-height: 1.7;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -73,34 +73,31 @@
 
 @layer components {
   .glitter-overlay {
-    background-image: 
-      radial-gradient(circle at 20% 80%, rgba(244, 114, 182, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.2) 0%, transparent 50%);
+    background: transparent;
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, #F472B6, #A78BFA, #60A5FA);
+    background: linear-gradient(135deg, #E11D48, #7C3AED, #2563EB);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-size: 1.125rem;
-    font-weight: 600;
+    font-size: 1.4rem;
+    font-weight: 700;
   }
 
-  /* Improved typography scale */
-  .text-xs { font-size: 0.8rem !important; }
-  .text-sm { font-size: 0.9rem !important; }
-  .text-base { font-size: 1rem !important; }
-  .text-lg { font-size: 1.125rem !important; }
-  .text-xl { font-size: 1.25rem !important; }
-  .text-2xl { font-size: 1.5rem !important; }
-  .text-3xl { font-size: 1.875rem !important; }
+  /* Improved typography scale - larger fonts */
+  .text-xs { font-size: 0.95rem !important; }
+  .text-sm { font-size: 1.1rem !important; }
+  .text-base { font-size: 1.25rem !important; }
+  .text-lg { font-size: 1.4rem !important; }
+  .text-xl { font-size: 1.6rem !important; }
+  .text-2xl { font-size: 1.9rem !important; }
+  .text-3xl { font-size: 2.3rem !important; }
 
   /* Better spacing for components */
   .card-content { @apply space-y-4 text-base leading-relaxed; }
   .button-text { @apply text-base font-medium; }
-  .nav-text { @apply text-lg; }
+  .nav-text { @apply text-lg font-medium; }
   
   .glassmorphism {
     background: rgba(255, 255, 255, 0.1);

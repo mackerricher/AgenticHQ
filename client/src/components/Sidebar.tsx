@@ -57,7 +57,7 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
               <img 
                 src={logoSrc} 
                 alt="AgenticHQ" 
-                className="h-8 w-auto"
+                className="h-12 w-auto"
               />
             </div>
           </Link>
