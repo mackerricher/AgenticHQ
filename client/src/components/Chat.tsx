@@ -19,6 +19,56 @@ import {
   Trash2
 } from "lucide-react";
 
+interface PlanStepsDisplayProps {
+  planId: number;
+  activePlanId: number | null;
+}
+
+function PlanStepsDisplay({ planId, activePlanId }: PlanStepsDisplayProps) {
+  const { data: plan } = useQuery({
+    queryKey: [`/api/plans/${planId}`],
+    enabled: !!planId,
+  });
+
+  if (!plan || !plan.steps) {
+    return null;
+  }
+
+  const steps = Array.isArray(plan.steps) ? plan.steps : JSON.parse(plan.steps);
+
+  return (
+    <div className="mt-4 space-y-3">
+      <h4 className="font-medium text-gray-900 dark:text-gray-100">Execution Steps:</h4>
+      {steps.map((step: any, index: number) => (
+        <div
+          key={index}
+          className="flex items-start gap-3 p-3 rounded-lg border bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-400/30"
+        >
+          <AlertCircle className="h-4 w-4 text-red-500" />
+          <div className="flex-1 min-w-0">
+            <div className="font-medium text-gray-800 dark:text-gray-200">
+              {step.tool.replace('.', ' → ')}
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              {Object.entries(step.args).map(([key, value]) => (
+                <span key={key} className="mr-3">
+                  {key}: <span className="font-mono">{String(value)}</span>
+                </span>
+              ))}
+            </div>
+            <div className="text-sm text-red-600 dark:text-red-400 mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
+              <strong>Error:</strong> {step.tool.includes('github') ? 'GitHub' : step.tool.includes('gmail') ? 'Gmail' : 'API'} token not configured. Please add your credentials in the Connections settings.
+            </div>
+          </div>
+          <div className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
+            ✗ Failed
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 interface ChatMessage {
   id: number;
   role: "user" | "assistant";

@@ -438,6 +438,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Plans routes
+  app.get("/api/plans/:id", async (req, res) => {
+    try {
+      const planId = parseInt(req.params.id);
+      const plan = await storage.getPlan(planId);
+      
+      if (!plan) {
+        return res.status(404).json({ error: "Plan not found" });
+      }
+      
+      res.json(plan);
+    } catch (error) {
+      console.error("Error fetching plan:", error);
+      res.status(500).json({ error: "Failed to fetch plan" });
+    }
+  });
+
   // Agent management routes
   app.get("/api/agents", async (_req, res) => {
     try {
