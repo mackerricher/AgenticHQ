@@ -10,9 +10,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Users, Trash2, Loader2 } from "lucide-react";
+import { Plus, Users, Trash2, Loader2, Settings } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { insertClientSchema, type Client } from "@shared/schema";
+import { insertClientSchema, type Client, type Agent } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
 const createClientFormSchema = insertClientSchema.extend({
@@ -24,18 +24,29 @@ type CreateClientForm = z.infer<typeof createClientFormSchema>;
 
 export default function Clients() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const { toast } = useToast();
 
   const { data: clients = [], isLoading } = useQuery<Client[]>({
     queryKey: ["/api/clients"],
   });
 
+  const { data: availableAgents = [] } = useQuery<Agent[]>({
+    queryKey: ["/api/agents"],
+  });
+
   const createClientMutation = useMutation({
     mutationFn: async (data: CreateClientForm) => {
+      const clientData = {
+        ...data,
+        agents: selectedAgents,
+      };
       const response = await fetch("/api/clients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(clientData),
       });
       if (!response.ok) throw new Error("Failed to create client");
       return response.json();
@@ -44,6 +55,7 @@ export default function Clients() {
       queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
       setIsCreateModalOpen(false);
       form.reset();
+      setSelectedAgents([]);
       toast({
         title: "Success",
         description: "Client created successfully",
@@ -53,6 +65,40 @@ export default function Clients() {
       toast({
         title: "Error",
         description: error.message || "Failed to create client",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateClientMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: CreateClientForm }) => {
+      const clientData = {
+        ...data,
+        agents: selectedAgents,
+      };
+      const response = await fetch(`/api/clients/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(clientData),
+      });
+      if (!response.ok) throw new Error("Failed to update client");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/clients"] });
+      setIsEditModalOpen(false);
+      setEditingClient(null);
+      editForm.reset();
+      setSelectedAgents([]);
+      toast({
+        title: "Success",
+        description: "Client updated successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update client",
         variant: "destructive",
       });
     },
@@ -91,8 +137,40 @@ export default function Clients() {
     },
   });
 
+  const editForm = useForm<CreateClientForm>({
+    resolver: zodResolver(createClientFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      agents: [],
+    },
+  });
+
   const onSubmit = (data: CreateClientForm) => {
     createClientMutation.mutate(data);
+  };
+
+  const onEditSubmit = (data: CreateClientForm) => {
+    if (!editingClient) return;
+    updateClientMutation.mutate({ id: editingClient.id, data });
+  };
+
+  const toggleAgent = (agentId: number) => {
+    setSelectedAgents(prev =>
+      prev.includes(agentId.toString())
+        ? prev.filter(id => id !== agentId.toString())
+        : [...prev, agentId.toString()]
+    );
+  };
+
+  const handleEditClient = (client: Client) => {
+    setEditingClient(client);
+    setSelectedAgents(Array.isArray(client.agents) ? client.agents : []);
+    editForm.reset({
+      name: client.name,
+      description: client.description,
+    });
+    setIsEditModalOpen(true);
   };
 
   const handleDeleteClient = (id: number) => {
@@ -159,6 +237,28 @@ export default function Clients() {
                       </FormItem>
                     )}
                   />
+
+                  <div>
+                    <h3 className="text-sm font-medium mb-3">Available Agents</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {availableAgents.map((agent) => (
+                        <Button
+                          key={agent.id}
+                          type="button"
+                          variant={selectedAgents.includes(agent.id.toString()) ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => toggleAgent(agent.id)}
+                          className="justify-start h-auto p-3"
+                        >
+                          <div className="text-left">
+                            <div className="font-medium">{agent.name}</div>
+                            <div className="text-xs opacity-70">{agent.description}</div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
                   <DialogFooter>
                     <Button
                       type="button"
