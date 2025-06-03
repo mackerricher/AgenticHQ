@@ -144,13 +144,13 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-pink-200 dark:border-violet-400/30 w-full max-w-2xl max-h-[90vh] overflow-hidden"
+          className="bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="p-6 border-b border-pink-200 dark:border-violet-400/30">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-heading gradient-text">Settings</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Settings</h2>
               <Button variant="ghost" onClick={onClose}>
                 ✕
               </Button>
@@ -180,10 +180,10 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
 
               <TabsContent value="llm" className="space-y-4">
                 {/* OpenAI */}
-                <div className="p-4 bg-gradient-to-r from-pink-50 to-violet-50 dark:from-violet-900/20 dark:to-pink-900/20 rounded-xl border border-pink-200 dark:border-violet-400/30">
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <Brain className="h-5 w-5 text-pink-500" />
+                      <Brain className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                       <span className="font-semibold">OpenAI</span>
                       <div className="flex items-center gap-2">
                         {getStatusIndicator(openaiStatus, openaiLoading)}
@@ -239,10 +239,10 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
                 </div>
 
                 {/* DeepSeek */}
-                <div className="p-4 bg-gradient-to-r from-pink-50 to-violet-50 dark:from-violet-900/20 dark:to-pink-900/20 rounded-xl border border-pink-200 dark:border-violet-400/30">
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <Brain className="h-5 w-5 text-violet-500" />
+                      <Brain className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                       <span className="font-semibold">DeepSeek</span>
                       <div className="flex items-center gap-2">
                         {getStatusIndicator(deepseekStatus, deepseekLoading)}
@@ -299,10 +299,10 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
               </TabsContent>
 
               <TabsContent value="github" className="space-y-4">
-                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-400/30">
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <Github className="h-5 w-5 text-blue-600" />
+                      <Github className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                       <span className="font-semibold">GitHub Personal Access Token</span>
                       <div className="flex items-center gap-2">
                         {getStatusIndicator(githubStatus, githubLoading)}
@@ -362,10 +362,10 @@ export default function SettingsModal({ onClose }: SettingsModalProps) {
               </TabsContent>
 
               <TabsContent value="gmail" className="space-y-4">
-                <div className="p-4 bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-400/30">
+                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <Mail className="h-5 w-5 text-red-600" />
+                      <Mail className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                       <span className="font-semibold">Gmail OAuth Credentials</span>
                       <div className="flex items-center gap-2">
                         {getStatusIndicator(gmailStatus, gmailLoading)}
