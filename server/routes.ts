@@ -331,7 +331,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate plan using DeepSeek with client-specific tools
       const plan = await deepseekService.generatePlan(message.trim(), availableTools);
 
-      // Create plan record
+      if (plan.length === 0) {
+        // Handle direct conversation without tools
+        const directResponse = await deepseekService.generateDirectResponse(message.trim());
+        
+        await storage.createChatMessage({
+          role: "assistant",
+          content: directResponse,
+        });
+
+        return res.json({
+          assistantMessage: directResponse,
+        });
+      }
+
+      // Create plan record for tool-based requests
       const planRecord = await storage.createPlan({
         userMessage: message.trim(),
         steps: JSON.stringify(plan),

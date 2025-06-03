@@ -27,7 +27,9 @@ export class DeepSeekService {
 Available tools:
 ${availableTools.map(tool => `- ${tool}`).join('\n')}
 
-Create a JSON plan with steps that use these tools. Each step should have:
+Analyze the user's request. If it can be accomplished using the available tools, create a JSON plan with steps. If it's a general question, creative request, or doesn't require tools, return an empty steps array.
+
+For tool-based requests, create steps with:
 - tool: the tool name (e.g., "GitHub.createRepo", "FileCreator.createMarkdown")
 - args: object with the arguments for the tool
 
@@ -38,6 +40,11 @@ Example plan format:
     { "tool": "FileCreator.createMarkdown", "args": { "text": "# MyProject\\nThis is my project." } },
     { "tool": "GitHub.addFile", "args": { "repo": "MyProject", "path": "README.md", "contentRef": 1 } }
   ]
+}
+
+For general questions, poetry, explanations, or conversations, return:
+{
+  "steps": []
 }
 
 Respond only with valid JSON.`;
@@ -54,6 +61,23 @@ Respond only with valid JSON.`;
 
     const result = JSON.parse(response.choices[0].message.content || "{}");
     return result.steps || [];
+  }
+
+  async generateDirectResponse(userMessage: string): Promise<string> {
+    const client = await this.getClient();
+    
+    const systemPrompt = `You are a helpful AI assistant. Respond naturally and conversationally to the user's request. Be creative, informative, and engaging.`;
+
+    const response = await client.chat.completions.create({
+      model: "deepseek-chat",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userMessage }
+      ],
+      temperature: 0.7,
+    });
+
+    return response.choices[0].message.content || "I'm here to help! Please let me know what you need.";
   }
 
   async generateResponse(userMessage: string, planResult: any): Promise<string> {
