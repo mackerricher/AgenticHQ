@@ -77,20 +77,11 @@ export default function Clients() {
   };
 
   return (
-    <div className="min-h-screen flex relative overflow-hidden">
-      {/* Glitter Overlay */}
-      <div className="fixed inset-0 glitter-overlay pointer-events-none z-0"></div>
-      
-      {/* Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar onSettingsClick={() => setShowSettings(true)} />
-      </div>
-      
-      <div className="flex-1 relative z-10">
-        <div className="max-w-6xl mx-auto p-8">
+    <div className="p-6">
+      <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-heading gradient-text mb-2">Clients</h1>
+              <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Clients</h1>
               <p className="text-gray-600 dark:text-gray-300">
                 Create AI clients by combining agents for specific workflows
               </p>
@@ -277,11 +268,6 @@ export default function Clients() {
           )}
         </div>
       </div>
-      
-      {/* Settings Modal */}
-      {showSettings && (
-        <SettingsModal onClose={() => setShowSettings(false)} />
-      )}
     </div>
   );
 }

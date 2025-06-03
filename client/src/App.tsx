@@ -4,8 +4,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "./components/ThemeProvider";
+import Layout from "@/components/Layout";
 
-import Home from "@/pages/Home";
+import Chat from "@/components/Chat";
 import Clients from "@/pages/Clients";
 import Agents from "@/pages/Agents";
 import SubAgents from "@/pages/SubAgents";
@@ -14,14 +15,16 @@ import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/clients" component={Clients} />
-      <Route path="/agents" component={Agents} />
-      <Route path="/subagents" component={SubAgents} />
-      <Route path="/tools" component={Tools} />
-      <Route component={NotFound} />
-    </Switch>
+    <Layout>
+      <Switch>
+        <Route path="/" component={Chat} />
+        <Route path="/clients" component={Clients} />
+        <Route path="/agents" component={Agents} />
+        <Route path="/subagents" component={SubAgents} />
+        <Route path="/tools" component={Tools} />
+        <Route component={NotFound} />
+      </Switch>
+    </Layout>
   );
 }
 
