@@ -44,6 +44,15 @@ export const planExecutions = pgTable("plan_executions", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const clients = pgTable("clients", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  agents: jsonb("agents").notNull().default([]), // Array of agent IDs
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -75,6 +84,12 @@ export const insertPlanExecutionSchema = createInsertSchema(planExecutions).pick
   error: true,
 });
 
+export const insertClientSchema = createInsertSchema(clients).pick({
+  name: true,
+  description: true,
+  agents: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -90,6 +105,9 @@ export type InsertPlan = z.infer<typeof insertPlanSchema>;
 
 export type PlanExecution = typeof planExecutions.$inferSelect;
 export type InsertPlanExecution = z.infer<typeof insertPlanExecutionSchema>;
+
+export type Client = typeof clients.$inferSelect;
+export type InsertClient = z.infer<typeof insertClientSchema>;
 
 // Plan step types
 export interface PlanStep {

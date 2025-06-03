@@ -35,6 +35,13 @@ export interface IStorage {
   getPlanExecutions(planId: number): Promise<PlanExecution[]>;
   createPlanExecution(execution: InsertPlanExecution): Promise<PlanExecution>;
   updatePlanExecution(id: number, updates: Partial<PlanExecution>): Promise<PlanExecution | undefined>;
+
+  // Clients
+  getClients(): Promise<Client[]>;
+  getClient(id: number): Promise<Client | undefined>;
+  createClient(client: InsertClient): Promise<Client>;
+  updateClient(id: number, updates: Partial<Client>): Promise<Client | undefined>;
+  deleteClient(id: number): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {

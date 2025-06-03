@@ -154,13 +154,7 @@ export default function Clients() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Clients combine multiple agents to create powerful AI workflows for specific use cases.
             </p>
-            <Button 
-              onClick={() => setIsCreateModalOpen(true)}
-              className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Create Your First Client
-            </Button>
+
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
