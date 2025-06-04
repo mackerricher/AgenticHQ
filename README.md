@@ -2,6 +2,8 @@
 
 A workflow-automation platform that combines AI planning with built-in GitHub and Gmail actions.
 
+![AgenticHQ Interface](attached_assets/homepage.png)
+
 ---
 
 ## Run Locally with Docker
