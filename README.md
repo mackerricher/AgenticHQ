@@ -48,6 +48,7 @@ MASTER_SECRET=change-me
    Wait until you see `postgres` turn **Healthy**.
 
 3. On your host machine, install devDependencies (so that `drizzle-kit` is available) and push the schema:
+   temporarily use localhost in the DATABASE_URL here because drizzle-kit runs on your host and cannot resolve the Docker hostname postgres:
 
    ```bash
    npm install             # installs drizzle-kit (and all devDeps)
