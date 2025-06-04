@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Github, Mail, Wrench, Users, Trash2, Loader2, Settings } from "lucide-react";
+import { Plus, Github, Mail, Wrench, Users, Trash2, Loader2, Edit } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { insertAgentSchema, type Agent, type SubAgent } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -491,7 +491,7 @@ export default function Agents() {
                         onClick={() => handleEditAgent(agent)}
                         className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
-                        <Settings className="h-4 w-4" />
+                        <Edit className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
