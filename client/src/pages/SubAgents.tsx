@@ -278,6 +278,86 @@ export default function SubAgents() {
               </Form>
             </DialogContent>
           </Dialog>
+
+          {/* Edit Sub-Agent Modal */}
+          <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+            <DialogContent className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <DialogHeader>
+                <DialogTitle className="text-gray-900 dark:text-gray-100">Edit Sub-Agent</DialogTitle>
+              </DialogHeader>
+              <Form {...editForm}>
+                <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4 py-4">
+                  <FormField
+                    control={editForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="mb-2 block">Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter sub-agent name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={editForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="mb-2 block">Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Describe what this sub-agent does" rows={3} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div>
+                    <Label className="mb-2 block">Available Tools</Label>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      {availableTools.map((tool) => (
+                        <Button
+                          key={tool}
+                          type="button"
+                          variant={selectedTools.includes(tool) ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => toggleTool(tool)}
+                          className="justify-start"
+                        >
+                          <Wrench className="h-3 w-3 mr-2" />
+                          {tool}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-4">
+                    <Button 
+                      type="submit"
+                      disabled={updateSubAgentMutation.isPending}
+                      className="flex-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200"
+                    >
+                      {updateSubAgentMutation.isPending ? "Updating..." : "Update Sub-Agent"}
+                    </Button>
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      onClick={() => {
+                        setIsEditModalOpen(false);
+                        setEditingSubAgent(null);
+                        setSelectedTools([]);
+                      }}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {subAgents.length === 0 ? (
@@ -306,14 +386,24 @@ export default function SubAgents() {
                         </p>
                       </div>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteSubAgent(subAgent.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditSubAgent(subAgent)}
+                        className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteSubAgent(subAgent.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
