@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Plus, Wrench, Package, Trash2, Loader2 } from "lucide-react";
+import { Plus, Wrench, Package, Trash2, Loader2, Edit } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { insertSubAgentSchema, type SubAgent } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -25,6 +25,8 @@ type CreateSubAgentForm = z.infer<typeof createSubAgentFormSchema>;
 
 export default function SubAgents() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingSubAgent, setEditingSubAgent] = useState<SubAgent | null>(null);
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const { toast } = useToast();
 
@@ -63,6 +65,36 @@ export default function SubAgents() {
     },
   });
 
+  const updateSubAgentMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: CreateSubAgentForm }) => {
+      const response = await fetch(`/api/subagents/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error("Failed to update sub-agent");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/subagents"] });
+      setIsEditModalOpen(false);
+      setEditingSubAgent(null);
+      editForm.reset();
+      setSelectedTools([]);
+      toast({
+        title: "Success",
+        description: "Sub-agent updated successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update sub-agent",
+        variant: "destructive",
+      });
+    },
+  });
+
   const deleteSubAgentMutation = useMutation({
     mutationFn: async (id: number) => {
       const response = await fetch(`/api/subagents/${id}`, {
@@ -96,6 +128,15 @@ export default function SubAgents() {
     },
   });
 
+  const editForm = useForm<CreateSubAgentForm>({
+    resolver: zodResolver(createSubAgentFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      tools: [],
+    },
+  });
+
   const onSubmit = (data: CreateSubAgentForm) => {
     const subAgentData = {
       ...data,
@@ -104,12 +145,32 @@ export default function SubAgents() {
     createSubAgentMutation.mutate(subAgentData);
   };
 
+  const onEditSubmit = (data: CreateSubAgentForm) => {
+    if (!editingSubAgent) return;
+    const subAgentData = {
+      ...data,
+      tools: selectedTools,
+    };
+    updateSubAgentMutation.mutate({ id: editingSubAgent.id, data: subAgentData });
+  };
+
   const toggleTool = (toolName: string) => {
     setSelectedTools(prev =>
       prev.includes(toolName)
         ? prev.filter(t => t !== toolName)
         : [...prev, toolName]
     );
+  };
+
+  const handleEditSubAgent = (subAgent: SubAgent) => {
+    setEditingSubAgent(subAgent);
+    editForm.reset({
+      name: subAgent.name,
+      description: subAgent.description,
+      tools: Array.isArray(subAgent.tools) ? subAgent.tools : [],
+    });
+    setSelectedTools(Array.isArray(subAgent.tools) ? subAgent.tools : []);
+    setIsEditModalOpen(true);
   };
 
   const handleDeleteSubAgent = (id: number) => {
